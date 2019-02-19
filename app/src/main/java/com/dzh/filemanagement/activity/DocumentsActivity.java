@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.adapter.DocAndZipsAdapter;
+import com.dzh.filemanagement.base.BaseActivity;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.core.common.SimpleFileComparator;
 import com.dzh.filemanagement.dao.DaoFactory;
@@ -41,7 +42,7 @@ import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.FileInfoDialog;
 
-public class DocumentsActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class DocumentsActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
 
     private static final int MSG_SHOW_PROGRESS = 0x2001;
     private static final int MSG_FINISH = 0x2002;
@@ -89,7 +90,6 @@ public class DocumentsActivity extends Activity implements OnItemClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_documents);
         mViewNothing = findViewById(R.id.nothing);
         
         FileUtils.checkFile(mDocs);
@@ -102,6 +102,16 @@ public class DocumentsActivity extends Activity implements OnItemClickListener, 
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
         mThread.start();
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_documents;
+    }
+
+    @Override
+    protected boolean isFullScreen() {
+        return false;
     }
 
     public void back(View view) {
@@ -119,8 +129,8 @@ public class DocumentsActivity extends Activity implements OnItemClickListener, 
         File file = new File(path);
 
         if (file.exists()) {
-            Intent intent = OpenFileUtil.openFile(path);
-            startActivity(intent);
+            OpenFileUtil.openFile(path , DocumentsActivity.this);
+
         } else {
             Toast.makeText(this, "文件已经不存在了~~", Toast.LENGTH_SHORT).show();
         }
@@ -130,7 +140,7 @@ public class DocumentsActivity extends Activity implements OnItemClickListener, 
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mChoosePosition = position;
         showWindow(view, position);
-        return false;
+        return true;
     }
 
     @SuppressWarnings("deprecation")

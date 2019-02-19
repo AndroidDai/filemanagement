@@ -34,6 +34,7 @@ import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.utils.DensityUtil;
 import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.view.FileInfoDialog;
 
 import io.zhuliang.appchooser.AppChooser;
@@ -104,16 +105,8 @@ public class ApksActivity extends AppCompatActivity implements OnItemClickListen
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String path = mApks.get(position);
         File file = new File(path);
-
         if (file.exists()) {
-//            Intent intent = OpenFileUtil.openFile(path);
-//            startActivity(intent);
-//            OpenFileUtil.showFile(path,this);
-
-            AppChooser.from(ApksActivity.this)
-                    .file(file)
-                    .excluded(excluded)
-                    .load();
+            OpenFileUtil.openFile(path,ApksActivity.this);
         } else {
             Toast.makeText(this, "文件已经不存在了~~", Toast.LENGTH_SHORT).show();
         }
@@ -123,7 +116,7 @@ public class ApksActivity extends AppCompatActivity implements OnItemClickListen
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mChoosePosition = position;
         showWindow(view, position);
-        return false;
+        return true;
     }
 
     @SuppressWarnings("deprecation")

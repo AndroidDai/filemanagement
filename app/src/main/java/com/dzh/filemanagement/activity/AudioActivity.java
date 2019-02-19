@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.adapter.AudioListViewAdapter;
+import com.dzh.filemanagement.base.BaseActivity;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.dao.DaoFactory;
 import com.dzh.filemanagement.dao.impl.FavoriteDao;
@@ -45,7 +46,7 @@ import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.AudioInfoDialog;
 
-public class AudioActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class AudioActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
 
     protected static final int MSG_UPDATE_DATA = 0x1031;
 
@@ -102,7 +103,7 @@ public class AudioActivity extends Activity implements OnItemClickListener, OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAudios = new ArrayList<Audio>();
-        setContentView(R.layout.activity_audio);
+
         mProgressDialog = UiUtil.createLoadingDialog(this, "正在为您加载音乐...");
         mViewNothing = findViewById(R.id.nothing);
 
@@ -117,6 +118,16 @@ public class AudioActivity extends Activity implements OnItemClickListener, OnIt
         mThread.start();
     }
 
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_audio;
+    }
+
+    @Override
+    protected boolean isFullScreen() {
+        return false;
+    }
+
     public void back(View view) {
         this.finish();
     }
@@ -128,15 +139,14 @@ public class AudioActivity extends Activity implements OnItemClickListener, OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = OpenFileUtil.openFile(mAudios.get(position).getPath());
-        startActivity(intent);
+        OpenFileUtil.openFile(mAudios.get(position).getPath() , AudioActivity.this);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mChoosePosition = position;
         showWindow(view, position);
-        return false;
+        return true;
     }
 
     @SuppressWarnings("deprecation")

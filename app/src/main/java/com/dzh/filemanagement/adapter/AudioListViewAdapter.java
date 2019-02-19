@@ -117,8 +117,8 @@ public class AudioListViewAdapter extends BaseAdapter implements OnScrollListene
         holder.mImgBtnPlay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = OpenFileUtil.openFile(audio.getPath());
-                mContext.startActivity(intent);
+                //Intent intent = OpenFileUtil.openFile(audio.getPath());
+                //mContext.startActivity(intent);
             }
         });
     }

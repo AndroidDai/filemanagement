@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.adapter.VideoGridViewAdapter;
+import com.dzh.filemanagement.base.BaseActivity;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.dao.DaoFactory;
 import com.dzh.filemanagement.dao.impl.FavoriteDao;
@@ -40,7 +41,7 @@ import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.VideoInfoDialog;
 
-public class VideoActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class VideoActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
 
     protected static final int MSG_PRE_LOAD = 0x1020;
 
@@ -95,10 +96,7 @@ public class VideoActivity extends Activity implements OnItemClickListener, OnIt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_video);
         mViewNothing = findViewById(R.id.nothing);
-
         mGridView = (GridView) findViewById(R.id.mVideoGrideView);
         mAdapter = new VideoGridViewAdapter(this, mVideos, mGridView);
         mGridView.setAdapter(mAdapter);
@@ -108,6 +106,16 @@ public class VideoActivity extends Activity implements OnItemClickListener, OnIt
 
         mThread = new VideoLoadThread();
         mThread.start();
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_video;
+    }
+
+    @Override
+    protected boolean isFullScreen() {
+        return false;
     }
 
     public void back(View view) {
@@ -124,8 +132,8 @@ public class VideoActivity extends Activity implements OnItemClickListener, OnIt
         String path = mVideos.get(position).getPath();
         File file = new File(path);
         if (file.exists()) {
-            Intent intent = OpenFileUtil.openFile(path);
-            startActivity(intent);
+            OpenFileUtil.openFile(path , this);
+
         }
 
     }
@@ -134,7 +142,7 @@ public class VideoActivity extends Activity implements OnItemClickListener, OnIt
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mChoosePosition = position;
         showWindow(view, position);
-        return false;
+        return true;
     }
 
     private void showWindow(View parent, int position) {

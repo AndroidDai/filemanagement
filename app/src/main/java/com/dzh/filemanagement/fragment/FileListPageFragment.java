@@ -49,6 +49,7 @@ import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.entity.NaviInfo;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.SharedPreferenceUtil;
 import com.dzh.filemanagement.utils.ToastUtils;
 import com.dzh.filemanagement.utils.UiUtil;
@@ -118,9 +119,10 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
     private FileListAdapter mAdapter = null;
     private LoadCurrentPageFilelistThrad mLoadCurrPageThread = null;
-
     private int mPosition = -1;
     private int mLastTimePosition = 0;
+    private List<String> noClickPath ;
+
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -192,6 +194,9 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         mAdapter = new FileListAdapter(mView.getContext(), mFileItems);
 
         mConnection = new CopyFileConnection();
+        noClickPath = new ArrayList<>();
+        noClickPath.add("/storage/emulated");
+        noClickPath.add("/storage");
         initView();
 
         mAdapter.setOnScrollListenerToListView(mListView);
@@ -420,15 +425,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         File file = new File(path);
 
         if (file.isFile()) {
-//            Intent intent = OpenFileUtil.openFile(path);
-//            startActivity(intent);
-
-            AppChooser.from(this)
-                    .file(file)
-                    .excluded(excluded)
-                    .authority("com.dzh.filemanagement.fileprovider")
-                    .load();
-
+            OpenFileUtil.openFile(path , mActivity);
         } else {
             mFileItems.clear();
             mCheckedList.clear();
@@ -452,11 +449,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
             }
         }
     }
-
-    private static ComponentName[] excluded = new ComponentName[]{
-            new ComponentName("nutstore.android", "nutstore.android.SendToNutstoreIndex"),
-            new ComponentName("nutstore.android.debug", "nutstore.android.SendToNutstoreIndex"),
-    };
 
     private void autoMoveToBottom() {
         mTopNaviScroll.post(new Runnable() {
@@ -485,10 +477,14 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         naviItemView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                while (!getCurrentPath().equals(v.getTag())) {
+                String tag = (String) v.getTag();
+                if (noClickPath.contains(tag) || "/".equals(tag)) {
+                    return;
+                }
+                while (!getCurrentPath().equals(tag)) {
                     mTopNaviInfoStack.pop();
                 }
-                reloadNaviViews((String) v.getTag());
+                reloadNaviViews(tag);
 
             }
         });

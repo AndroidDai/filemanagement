@@ -135,8 +135,9 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
         File file = new File(path);
 
         if (file.exists()) {
-            Intent intent = OpenFileUtil.openFile(path);
-            startActivity(intent);
+           // OpenFileUtil.openFile(path);  直接解压
+
+
         } else {
             Toast.makeText(this, "文件已经不存在了~~", Toast.LENGTH_SHORT).show();
         }
@@ -146,7 +147,7 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mChoosePosition = position;
         showWindow(view, position);
-        return false;
+        return true;
     }
 
     @SuppressWarnings("deprecation")

@@ -114,8 +114,8 @@ public class VideoGridViewAdapter extends BaseAdapter implements OnScrollListene
                 String path = mVideos.get(p).getPath();
                 File file = new File(path);
                 if (file.exists()) {
-                    Intent intent = OpenFileUtil.openFile(path);
-                    mContext.startActivity(intent);
+                    //Intent intent = OpenFileUtil.openFile(path);
+                    //mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "文件已经不存在了...", Toast.LENGTH_SHORT).show();
                 }

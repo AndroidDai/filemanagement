@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.adapter.ImageWallGridAdapter;
+import com.dzh.filemanagement.base.BaseActivity;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.dao.DaoFactory;
 import com.dzh.filemanagement.dao.impl.FavoriteDao;
@@ -40,7 +41,7 @@ import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.FileInfoDialog;
 
-public class ImageWallActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class ImageWallActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
 
     public static final int MSG_PRE_LOAD = 0x1010;
     protected static final int MSG_FINSH_LOAD = 0x1011;
@@ -91,7 +92,6 @@ public class ImageWallActivity extends Activity implements OnItemClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_image_wall);
         mDialog = UiUtil.createLoadingDialog(this, "你的图片好多...");
         mViewNoting = findViewById(R.id.nothing);
 
@@ -105,6 +105,16 @@ public class ImageWallActivity extends Activity implements OnItemClickListener, 
         mThread = new ImageLoadThread();
         mThread.start();
 
+    }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_image_wall;
+    }
+
+    @Override
+    protected boolean isFullScreen() {
+        return false;
     }
 
     public void back(View view) {
@@ -142,8 +152,8 @@ public class ImageWallActivity extends Activity implements OnItemClickListener, 
         File file = new File(path);
 
         if (file.exists()) {
-            Intent intent = OpenFileUtil.openFile(path);
-            startActivity(intent);
+             OpenFileUtil.openFile(path , ImageWallActivity.this);
+
         } else {
             Toast.makeText(this, "图片已经不存在了~~", Toast.LENGTH_SHORT).show();
         }
@@ -153,7 +163,7 @@ public class ImageWallActivity extends Activity implements OnItemClickListener, 
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mChoosePosition = position;
         showWindow(view, position);
-        return false;
+        return true;
     }
 
     @SuppressWarnings("deprecation")

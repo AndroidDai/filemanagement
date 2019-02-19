@@ -87,7 +87,7 @@ public class ApplicationsActivity extends Activity implements OnItemClickListene
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+        return true;
     }
 
 }

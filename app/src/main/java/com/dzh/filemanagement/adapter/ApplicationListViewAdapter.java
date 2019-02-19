@@ -129,7 +129,7 @@ public class ApplicationListViewAdapter extends BaseAdapter implements OnScrollL
             tv.setText("用户应用：" + mUserAppCount);
             tv.setTextColor(Color.WHITE);
             tv.setBackgroundColor(Color.GRAY);
-            tv.setTextSize(DensityUtil.dip2px(mListView.getContext(), 10));
+            tv.setTextSize(DensityUtil.dip2px(mListView.getContext(), 6));
             return tv;
         } else if (position == mUserAppCount - 1) {
             TextView tv = new TextView(mListView.getContext());

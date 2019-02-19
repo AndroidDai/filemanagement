@@ -118,8 +118,8 @@ public class NewFileDialogInput extends Dialog implements TextWatcher, OnClickLi
                         mFragment.gotoSelecttion(mNewName);
                         
                         Toast.makeText(getContext(), "创建文件" + FileUtils.getFileName(mNewName) + "成功！", Toast.LENGTH_SHORT).show();
-                        Intent intent = OpenFileUtil.openFile(mNewName);
-                        getContext().startActivity(intent);
+                        //Intent intent = OpenFileUtil.openFile(mNewName);
+                        //getContext().startActivity(intent);
                     } catch (IOException e) {
                         Toast.makeText(getContext(), "创建文件" + FileUtils.getFileName(mNewName) + "失败！", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
