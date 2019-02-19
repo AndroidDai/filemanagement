@@ -39,7 +39,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.cmcm.greendamexplorer.activity.R;
+import com.dzh.filemanagement.R;
+
 
 /**
  * 滑动指示器pstsindicatorcolor颜色

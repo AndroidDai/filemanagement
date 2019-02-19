@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".WelcomActivity" >
 
-    <com.cmcm.greendamexplorer.view.IObservableScrollView
+    <com.dzh.filemanagement.view.IObservableScrollView
         android:id="@+id/mSwelcomeScrollView"
         android:layout_width="fill_parent"
         android:scrollbars="none"
@@ -130,6 +130,6 @@
                 android:layout_marginTop="35dp"
                 android:background="@drawable/welcome_imgbtn" />
         </LinearLayout>
-    </com.cmcm.greendamexplorer.view.IObservableScrollView>
+    </com.dzh.filemanagement.view.IObservableScrollView>
 
 </RelativeLayout>

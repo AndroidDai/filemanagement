@@ -14,4 +14,31 @@ allprojects {
         jcenter()
         google()
     }
+    ext {
+        versionCode = 13
+        versionName = "3.0.0-alpha"
+
+        compileSdkVersion = 28
+        buildToolsVersion = '28.0.0'
+        minSdkVersion = 15
+        targetSdkVersion = 28
+
+        // Test Compile
+        junitVersion = '4.12'
+        mockitocoreVersion = '1.10.19'
+
+        supportSdkVersion = '28.0.0'
+        espressoVersion = '3.0.2'
+        testRunnerVersion = '1.0.2'
+        constraintLayoutVersion = '1.1.1'
+
+        // RxJava
+        rxjava = '1.2.5'
+        rxandroid = '1.2.1'
+
+        // GreenRobot
+        eventbusVersion  = '3.0.0'
+
+        baservadapterVersion = '3.0.3'
+    }
 }

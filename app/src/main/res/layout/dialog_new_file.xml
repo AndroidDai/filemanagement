@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.cmcm.greendamexplorer.activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mNewFileDialogRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+    <com.dzh.filemanagement.view.flatui.views.FlatButton
         android:id="@+id/mBtnNewDialogNewFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:text="新建文件"
         app:fl_theme="@array/grass" />
 
-    <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+    <com.dzh.filemanagement.view.flatui.views.FlatButton
         android:id="@+id/mBtnNewDialogNewFolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         app:fl_textColor="main"
         app:fl_theme="@array/grass" />
 
-    <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+    <com.dzh.filemanagement.view.flatui.views.FlatButton
         android:id="@+id/mBtnNewDialogCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

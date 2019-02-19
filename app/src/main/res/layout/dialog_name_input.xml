@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.cmcm.greendamexplorer.activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rename_dialog_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +16,7 @@
         android:layout_marginTop="20dip"
         android:orientation="horizontal" >
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatTextView
+        <com.dzh.filemanagement.view.flatui.views.FlatTextView
             android:id="@+id/title_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,9 +25,9 @@
             android:maxLines="1"
             android:textSize="15sp"
             app:fl_fontFamily="roboto_extralight" >
-        </com.cmcm.greendamexplorer.view.flatui.views.FlatTextView>
+        </com.dzh.filemanagement.view.flatui.views.FlatTextView>
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatEditText
+        <com.dzh.filemanagement.view.flatui.views.FlatEditText
             android:id="@+id/mEtOriginalName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:layout_marginTop="15dip"
         android:orientation="horizontal" >
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatTextView
+        <com.dzh.filemanagement.view.flatui.views.FlatTextView
             android:id="@+id/title_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,9 +53,9 @@
             android:maxLines="1"
             android:textSize="15sp"
             app:fl_fontFamily="roboto_extralight" >
-        </com.cmcm.greendamexplorer.view.flatui.views.FlatTextView>
+        </com.dzh.filemanagement.view.flatui.views.FlatTextView>
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatEditText
+        <com.dzh.filemanagement.view.flatui.views.FlatEditText
             android:id="@+id/mEtNewName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         android:layout_marginBottom="10dp"
         android:orientation="horizontal" >
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnDelDialogCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
             android:text="取消"
             app:fl_theme="@array/grass" />
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnDelDialogOk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

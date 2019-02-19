@@ -4,7 +4,7 @@
     android:focusable="false"
     android:layout_height="match_parent" >
 
-    <com.cmcm.greendamexplorer.view.CMImageView
+    <com.dzh.filemanagement.view.CMImageView
         android:id="@+id/mImageWallPicture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

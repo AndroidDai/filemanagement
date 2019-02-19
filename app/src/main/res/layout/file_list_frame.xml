@@ -5,7 +5,7 @@
 
     <!-- 这个Viewvi需放到第一个 -->
 
-    <com.cmcm.greendamexplorer.view.SwipListView
+    <com.dzh.filemanagement.view.SwipListView
         android:id="@+id/fileList"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -47,32 +47,32 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.cmcm.greendamexplorer.view.FileListBottomToolBar
+    <com.dzh.filemanagement.view.FileListBottomToolBar
         android:id="@+id/mBottomToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" >
-    </com.cmcm.greendamexplorer.view.FileListBottomToolBar>
+    </com.dzh.filemanagement.view.FileListBottomToolBar>
 
-    <com.cmcm.greendamexplorer.view.FileListBottomOperatorMenu
+    <com.dzh.filemanagement.view.FileListBottomOperatorMenu
         android:id="@+id/mBottomMenu"
         android:layout_width="match_parent"
         android:layout_height="231dp"
         android:layout_gravity="bottom" >
-    </com.cmcm.greendamexplorer.view.FileListBottomOperatorMenu>
+    </com.dzh.filemanagement.view.FileListBottomOperatorMenu>
 
-    <com.cmcm.greendamexplorer.view.CopyBottomChooseBar
+    <com.dzh.filemanagement.view.CopyBottomChooseBar
         android:id="@+id/mBottomChooseBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" >
-    </com.cmcm.greendamexplorer.view.CopyBottomChooseBar>
+    </com.dzh.filemanagement.view.CopyBottomChooseBar>
 
-    <com.cmcm.greendamexplorer.view.MoveBottomChooseBar
+    <com.dzh.filemanagement.view.MoveBottomChooseBar
         android:id="@+id/mBottomMoveChooseBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" >
-    </com.cmcm.greendamexplorer.view.MoveBottomChooseBar>
+    </com.dzh.filemanagement.view.MoveBottomChooseBar>
 
 </FrameLayout>

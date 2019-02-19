@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.cmcm.greendamexplorer.activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mVideoInfoDialogRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -200,7 +200,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp" >
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnVideoInfoGoDir"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
             android:text="去目录"
             app:fl_theme="@array/grass" />
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnVideoInfoOk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

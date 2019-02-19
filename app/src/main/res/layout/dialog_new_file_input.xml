@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.cmcm.greendamexplorer.activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mNewFileDialogInput"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,7 +8,7 @@
     android:layout_marginTop="10dp"
     android:orientation="vertical" >
 
-    <com.cmcm.greendamexplorer.view.flatui.views.FlatEditText
+    <com.dzh.filemanagement.view.flatui.views.FlatEditText
         android:id="@+id/mEtNewFileName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnNewFileInputDialogCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             android:text="取消"
             app:fl_theme="@array/grass" />
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnNewFileInputDialogOk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

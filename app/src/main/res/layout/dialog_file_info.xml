@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.cmcm.greendamexplorer.activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mFileInfoDialogRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -141,7 +141,7 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnFileInfoGoDir"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
             android:visibility="gone"
             app:fl_theme="@array/grass" />
 
-        <com.cmcm.greendamexplorer.view.flatui.views.FlatButton
+        <com.dzh.filemanagement.view.flatui.views.FlatButton
             android:id="@+id/mBtnFileInfoOk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
