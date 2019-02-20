@@ -14,7 +14,7 @@ import android.widget.EditText;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 
 public class RenameDialog extends Dialog implements TextWatcher, OnClickListener{
@@ -61,10 +61,10 @@ public class RenameDialog extends Dialog implements TextWatcher, OnClickListener
         mBtnOk = (Button) mView.findViewById(R.id.mBtnDelDialogOk);
         
         mEtOrignalName.setEnabled(false);
-        mEtOrignalName.setText(FileUtils.getFileName(mOrignalPath));
-        mEtNewName.setText(FileUtils.getFileName(mOrignalPath));
+        mEtOrignalName.setText(FmFileUtils.getFileName(mOrignalPath));
+        mEtNewName.setText(FmFileUtils.getFileName(mOrignalPath));
         mEtNewName.setSelectAllOnFocus(true);
-        mParentPath = FileUtils.getParent(mOrignalPath);
+        mParentPath = FmFileUtils.getParent(mOrignalPath);
         
         mEtNewName.addTextChangedListener(this);
         mBtnOk.setOnClickListener(this);
@@ -92,7 +92,7 @@ public class RenameDialog extends Dialog implements TextWatcher, OnClickListener
         }
          String path = mParentPath + "/" + name;
 
-        if (!FileUtils.isLegalPath(path) || FileUtils.contansPath(mInfos, path)) {
+        if (!FmFileUtils.isLegalPath(path) || FmFileUtils.contansPath(mInfos, path)) {
             mBtnOk.setEnabled(false);
         } else {
             mNewName = path;

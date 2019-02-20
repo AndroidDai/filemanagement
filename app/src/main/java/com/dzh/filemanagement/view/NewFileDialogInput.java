@@ -8,7 +8,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,8 +23,7 @@ import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.fragment.FileListPageFragment;
-import com.dzh.filemanagement.utils.FileUtils;
-import com.dzh.filemanagement.utils.OpenFileUtil;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 
 @SuppressLint("HandlerLeak")
@@ -117,11 +115,11 @@ public class NewFileDialogInput extends Dialog implements TextWatcher, OnClickLi
                         Collections.sort(mInfos, new FileComparator());
                         mFragment.gotoSelecttion(mNewName);
                         
-                        Toast.makeText(getContext(), "创建文件" + FileUtils.getFileName(mNewName) + "成功！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "创建文件" + FmFileUtils.getFileName(mNewName) + "成功！", Toast.LENGTH_SHORT).show();
                         //Intent intent = OpenFileUtil.openFile(mNewName);
                         //getContext().startActivity(intent);
                     } catch (IOException e) {
-                        Toast.makeText(getContext(), "创建文件" + FileUtils.getFileName(mNewName) + "失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "创建文件" + FmFileUtils.getFileName(mNewName) + "失败！", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
@@ -136,9 +134,9 @@ public class NewFileDialogInput extends Dialog implements TextWatcher, OnClickLi
                     mFragment.gotoSelecttion(mNewName);
                     boolean flag = file.mkdirs();
                     if (flag) {
-                        Toast.makeText(getContext(), "创建文件夹" + FileUtils.getFileName(mNewName) + "成功！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "创建文件夹" + FmFileUtils.getFileName(mNewName) + "成功！", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "创建文件夹" + FileUtils.getFileName(mNewName) + "失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "创建文件夹" + FmFileUtils.getFileName(mNewName) + "失败！", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -181,7 +179,7 @@ public class NewFileDialogInput extends Dialog implements TextWatcher, OnClickLi
         }
         String path = mCurrentFolder + "/" + name;
 
-        if (!FileUtils.isLegalPath(path) || FileUtils.contansPath(mInfos, path)) {
+        if (!FmFileUtils.isLegalPath(path) || FmFileUtils.contansPath(mInfos, path)) {
             mBtnNewFileOk.setEnabled(false);
         } else {
             mNewName = path;

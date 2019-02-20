@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -37,7 +36,7 @@ import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.fragment.FileCategoryPageFragment;
 import com.dzh.filemanagement.utils.DensityUtil;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.FileInfoDialog;
@@ -92,7 +91,7 @@ public class DocumentsActivity extends BaseActivity implements OnItemClickListen
         super.onCreate(savedInstanceState);
         mViewNothing = findViewById(R.id.nothing);
         
-        FileUtils.checkFile(mDocs);
+        FmFileUtils.checkFile(mDocs);
         Collections.sort(mDocs, new SimpleFileComparator());
 
         mListView = (ListView) findViewById(R.id.mDocListView);

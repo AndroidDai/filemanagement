@@ -44,19 +44,6 @@ public class DeploymentOperation extends Application {
         super.onCreate();
         mAppSeft = this;
         PACKAGE_NAME = getPackageName();
-
-        PermissionsUtil.requestPermission(getApplicationContext(), new PermissionListener() {
-            @Override
-            public void permissionGranted(@NonNull String[] permissions) {
-                //deployeDataBase(getApplicationContext(), false);
-            }
-
-            @Override
-            public void permissionDenied(@NonNull String[] permissions) {
-
-            }
-        }, Manifest.permission.WRITE_EXTERNAL_STORAGE , Manifest.permission.READ_EXTERNAL_STORAGE);
-
         initResource();
 
     }

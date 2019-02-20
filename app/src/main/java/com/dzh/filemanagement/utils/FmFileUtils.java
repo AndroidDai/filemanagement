@@ -16,9 +16,9 @@ import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.exception.IllegalFilePath;
 
-public class FileUtils {
+public class FmFileUtils {
 
-    private static final String TAG = "FileUtils";
+    private static final String TAG = "FmFileUtils";
 
     /**
      * 从完全名字获得文件名

@@ -7,18 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,17 +35,15 @@ import com.dzh.filemanagement.adapter.FileListAdapter.OnCheckBoxChangedListener;
 import com.dzh.filemanagement.core.common.FileComparator;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.core.engine.ResourceManager;
-import com.dzh.filemanagement.core.engine.service.copy.CopyFileService;
-import com.dzh.filemanagement.core.engine.service.copy.ICopyFiles;
-import com.dzh.filemanagement.core.engine.service.copy.SimpleCopyFileCallback;
 import com.dzh.filemanagement.dao.DaoFactory;
 import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.entity.NaviInfo;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.SharedPreferenceUtil;
+import com.dzh.filemanagement.utils.SysShareUtils;
 import com.dzh.filemanagement.utils.ToastUtils;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.CopyBottomChooseBar;
@@ -58,7 +51,6 @@ import com.dzh.filemanagement.view.DeleteFileDialog;
 import com.dzh.filemanagement.view.FileInfoDialog;
 import com.dzh.filemanagement.view.FileListBottomOperatorMenu;
 import com.dzh.filemanagement.view.FileListBottomToolBar;
-import com.dzh.filemanagement.view.IOnBottomChooserBarClickListener;
 import com.dzh.filemanagement.view.IOnDialogBtnClickListener;
 import com.dzh.filemanagement.view.IOnMenuItemClickListener;
 import com.dzh.filemanagement.view.MoveBottomChooseBar;
@@ -67,20 +59,16 @@ import com.dzh.filemanagement.view.RenameDialog;
 import com.dzh.filemanagement.view.SortDialog;
 import com.dzh.filemanagement.view.SwipListView;
 import com.dzh.filemanagement.view.SwipListView.OnSwipListItemRemoveListener;
-
-import io.zhuliang.appchooser.AppChooser;
+import com.github.dfqin.grantor.PermissionListener;
+import com.github.dfqin.grantor.PermissionsUtil;
 
 
 /**
  * 文件目录浏览的Fragment
- * 
+ *
  * @author Administrator
- * 
  */
 public class FileListPageFragment extends Fragment implements OnSwipListItemRemoveListener, OnItemClickListener, IOnBackPressed, OnItemLongClickListener {
-
-    private ICopyFiles mService = null;
-    private CopyFileConnection mConnection = null;
 
     private static final String TAG = "FileListPageFragment";
     private static final int MSG_UPDATE_DATA = 0x1001;
@@ -114,14 +102,11 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
     private View mNothingView = null;
 
     private BottomMenuOnclickListener mMenuOnclickListener = null;
-    private CopyBottomBarListner mCopyBottomBarListner = null;
-    private MoveBottonBarListner mMoveBottonBarListner = null;
-
     private FileListAdapter mAdapter = null;
     private LoadCurrentPageFilelistThrad mLoadCurrPageThread = null;
     private int mPosition = -1;
     private int mLastTimePosition = 0;
-    private List<String> noClickPath ;
+    private List<String> noClickPath;
 
 
     @SuppressLint("HandlerLeak")
@@ -164,7 +149,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                 refresh();
             } else if (msg.what == MSG_GO_TO_SELECT) {
                 String targetPath = (String) msg.obj;
-                int position = FileUtils.getPositionInFileList(mFileItems, targetPath);
+                int position = FmFileUtils.getPositionInFileList(mFileItems, targetPath);
                 mListView.setSelection(position);
             }
         }
@@ -183,7 +168,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         }
 
         return lastTimePosition;
-    };
+    }
 
     public SwipListView getListView() {
         return mListView;
@@ -191,9 +176,9 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.file_list_frame, null);
-        mAdapter = new FileListAdapter(mView.getContext(), mFileItems);
 
-        mConnection = new CopyFileConnection();
+
+        mAdapter = new FileListAdapter(mView.getContext(), mFileItems);
         noClickPath = new ArrayList<>();
         noClickPath.add("/storage/emulated");
         noClickPath.add("/storage");
@@ -235,10 +220,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         mBottomMenu.setOnItemClickListener(mMenuOnclickListener);
 
         mBottomToolBar.setOnItemClickListener(mMenuOnclickListener);
-
-        mCopyBottomChooseBar.setOnBottomChooserBarClickListener(mCopyBottomBarListner);
-
-        mMoveBottomChooseBar.setOnBottomChooserBarClickListener(mMoveBottonBarListner);
     }
 
     private void initView() {
@@ -249,8 +230,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         mLinearTopNavi = (LinearLayout) mView.findViewById(R.id.mLinearTopNavi);
         mTopNaviScroll = (HorizontalScrollView) mView.findViewById(R.id.mTopNaviScroll);
         mMenuOnclickListener = new BottomMenuOnclickListener(mCheckedList, mView, this, mAdapter);
-        mCopyBottomBarListner = new CopyBottomBarListner();
-        mMoveBottonBarListner = new MoveBottonBarListner();
         mBottomMenu = (FileListBottomOperatorMenu) mView.findViewById(R.id.mBottomMenu);
         mBottomToolBar = (FileListBottomToolBar) mView.findViewById(R.id.mBottomToolBar);
         mCopyBottomChooseBar = (CopyBottomChooseBar) mView.findViewById(R.id.mBottomChooseBar);
@@ -264,9 +243,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         mListView.setOnItemClickListener(this);
         ((MainActivity) getActivity()).setOnBackPressedListener(this);
 
-        Intent intent = new Intent(getActivity() , CopyFileService.class);
-        getActivity().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -276,7 +252,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getActivity().unbindService(mConnection);
     }
 
     /**
@@ -289,9 +264,8 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
     /**
      * 扫描当前文件夹下的异步任务
-     * 
+     *
      * @author Administrator
-     * 
      */
     class LoadCurrentPageFilelistThrad extends Thread {
 
@@ -301,7 +275,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         private boolean mIsNeedSetAppName = false;
 
         public LoadCurrentPageFilelistThrad(String path) {
-            if (FileUtils.isLegalPath(path)) {
+            if (FmFileUtils.isLegalPath(path)) {
                 this.path = path;
             } else {
                 Log.e(TAG, "非法的文件路径！");
@@ -309,7 +283,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         }
 
         public LoadCurrentPageFilelistThrad(String path, String targetPath) {
-            if (FileUtils.isLegalPath(path)) {
+            if (FmFileUtils.isLegalPath(path)) {
                 this.path = path;
             } else {
                 Log.e(TAG, "非法的文件路径！");
@@ -339,7 +313,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                 }
                 for (int i = 0; i < files.length; i++) {
                     try {
-                        if (!showHideFile && FileUtils.isHideFile(files[i].getName())) {
+                        if (!showHideFile && FmFileUtils.isHideFile(files[i].getName())) {
                             continue;
                         }
 
@@ -352,7 +326,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                             fileInfo = new SimpleFileInfo(canonicalPath, files[i].length());
                         }
                         fileInfo.setCreateTime(files[i].lastModified());
-                        fileInfo.setFileSize(FileUtils.getChildCount(files[i]));
+                        fileInfo.setFileSize(FmFileUtils.getChildCount(files[i]));
                         if (!mIsNeedSetAppName) {
                             fileInfo.setAppName("");
                         }
@@ -425,7 +399,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         File file = new File(path);
 
         if (file.isFile()) {
-            OpenFileUtil.openFile(path , mActivity);
+            OpenFileUtil.openFile(path, mActivity);
         } else {
             mFileItems.clear();
             mCheckedList.clear();
@@ -436,19 +410,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         }
     }
 
-    public void moveto(String filePath) {
-        File file = new File(filePath);
-        if (file.exists() && file.isFile()) {
-            File parent = file.getParentFile();
-            String[] fileNames = parent.list();
-            for (int i = 0; i < fileNames.length; i++) {
-                if (filePath.equals(fileNames[i])) {
-                    mListView.setSelection(i);
-                    break;
-                }
-            }
-        }
-    }
 
     private void autoMoveToBottom() {
         mTopNaviScroll.post(new Runnable() {
@@ -463,8 +424,8 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
     private void addToNaviList(String path) {
         View naviItemView = LayoutInflater.from(mView.getContext()).inflate(R.layout.file_navi_item, null);
         final TextView tv = (TextView) naviItemView.findViewById(R.id.mTvNaviItem);
-        String text = FileUtils.getFileName(path);
-        if (text.endsWith(FileUtils.getFileName(mRootPath))) {
+        String text = FmFileUtils.getFileName(path);
+        if (text.endsWith(FmFileUtils.getFileName(mRootPath))) {
             if (text.length() >= 1) {
                 text = "内部存储";
             }
@@ -518,7 +479,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
     }
 
     public void gotoSelecttion(String path) {
-        int position = FileUtils.getPositionInFileList(mFileItems, path);
+        int position = FmFileUtils.getPositionInFileList(mFileItems, path);
         mAdapter.notifyDataSetChanged();
         mListView.setSelection(position);
     }
@@ -551,7 +512,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         mTopNaviInfoStack.clear();
         mCheckedList.clear();
         mFileItems.clear();
-        List<String> pathStackList = FileUtils.generatePathStack(path);
+        List<String> pathStackList = FmFileUtils.generatePathStack(path);
         for (int i = 0; i < pathStackList.size(); i++) {
             addToNaviList(pathStackList.get(i));
         }
@@ -569,7 +530,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         String curPath = getCurrentPath();
         if (mBottomMenu.isShow()) {// 隐藏操作栏
             mBottomMenu.hide();
-            FileUtils.selecteAll(mFileItems, false);
+            FmFileUtils.selecteAll(mFileItems, false);
             mBottomMenu.setSelecteAll();
             mCheckedList.clear();
             mAdapter.notifyDataSetChanged();
@@ -631,54 +592,54 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         @Override
         public void onItemClick(View rootView, View view) {
             switch (view.getId()) {
-            case R.id.mOpCopy:// 压缩
-                tozip();
-                mBottomMenu.hide();
-                break;
+                case R.id.mOpCopy:// 压缩
+                    tozip();
+                    mBottomMenu.hide();
+                    break;
 
-            case R.id.mOpDel:
-                deleteFiles();// 删除
-                break;
+                case R.id.mOpDel:
+                    deleteFiles();// 删除
+                    break;
 
-            case R.id.mOpMove:// 解压
-                unzip();
-                break;
-            case R.id.mOpSelectAll:// 选择所有
+                case R.id.mOpMove:// 解压
+                    unzip();
+                    break;
+                case R.id.mOpSelectAll:// 选择所有
 
-                break;
+                    break;
 
-            case R.id.mOpAddToFavorite:
-                addToFavorite();
-                break;
+                case R.id.mOpAddToFavorite:
+                    addToFavorite();
+                    break;
 
-            case R.id.mOpReName:
-                rename();// 重命名
-                break;
-            case R.id.mOpShare:
-                share();// 分享
-                break;
+                case R.id.mOpReName:
+                    rename();// 重命名
+                    break;
+                case R.id.mOpShare:
+                    share();// 分享
+                    break;
 
-            case R.id.mToolBarNew:// 新建文件
-                newFile();
-                break;
+                case R.id.mToolBarNew:// 新建文件
+                    newFile();
+                    break;
 
-            case R.id.mOpFileInfo:// 查看详情
-                showDetail();
-                break;
+                case R.id.mOpFileInfo:// 查看详情
+                    showDetail();
+                    break;
 
-            case R.id.mToolBarRefresh:
-                refresh();
-                break;
+                case R.id.mToolBarRefresh:
+                    refresh();
+                    break;
 
-            case R.id.mToolBarSetting:
-                mActivity.showLeft();
-                break;
+                case R.id.mToolBarSetting:
+                    mActivity.showLeft();
+                    break;
 
-            case R.id.mToolBarSort:
-                sort();
-                break;
-            default:
-                break;
+                case R.id.mToolBarSort:
+                    sort();
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -693,7 +654,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                 if (null != dao.findFavoriteByFullPath(mCheckedList.get(i))) {
                     continue;
                 }
-                Favorite favorite = FileUtils.generateFavorateByPath(mCheckedList.get(i));
+                Favorite favorite = FmFileUtils.generateFavorateByPath(mCheckedList.get(i));
                 favorites.add(favorite);
             }
             dao.insertFavorites(favorites);
@@ -707,7 +668,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
         private void reset() {
             mCheckedList.clear();
-            FileUtils.selecteAll(mFileItems, false);
+            FmFileUtils.selecteAll(mFileItems, false);
             mAdapter.notifyDataSetChanged();
             mBottomMenu.hide();
         }
@@ -716,16 +677,10 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
             if (!checkOperatorPath("请选择一个要分享的文件", "暂不支持分享多个文件")) {
                 return;
             }
-
-            Intent intent = new Intent(Intent.ACTION_SEND);
             String filePath = mOperatorPaths.get(0);
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
-            intent.setType("*/*");
-            intent.putExtra(Intent.EXTRA_SUBJECT, "文件分享");
-            intent.putExtra(Intent.EXTRA_TEXT, "我想分享给你我的文件。");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(Intent.createChooser(intent, mActivity.getTitle()));
+            SysShareUtils.INSTANCE.shareFile(mActivity, "文件分享", new File(filePath));
             reset();
+
         }
 
         private boolean checkOperatorPath(String empty, String multi) {
@@ -761,22 +716,21 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
             dialog.show();
         }
 
-        // 移动
+        // 解压
         private void unzip() {
 
             if (mCheckedList.size() == 0) {
-                ToastUtils.showToast(mView.getContext(), "请先选择一个要移动的文件");
+                ToastUtils.showToast(mView.getContext(), "请先选择一个要解压的文件");
                 return;
             }
             mMoveBottomChooseBar.show();
-
             mOperatorList = new ArrayList<String>(mCheckedList);
             mCheckedList.clear();
-            FileUtils.selecteAll(mFileItems, false);
+            FmFileUtils.selecteAll(mFileItems, false);
             mAdapter.notifyDataSetChanged();
         }
 
-        // 复制
+        // 压缩
         private void tozip() {
 
             if (mCheckedList.size() == 0) {
@@ -785,7 +739,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
             }
             mCopyBottomChooseBar.show();
             mOperatorList = new ArrayList<String>(mCheckedList);
-            FileUtils.selecteAll(mFileItems, false);
+            FmFileUtils.selecteAll(mFileItems, false);
             mAdapter.notifyDataSetChanged();
         }
 
@@ -858,12 +812,12 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
         @Override
         public void onOkClick(View view, String newPath) {
-            boolean result = FileUtils.rename(mOperatorPaths.get(0), newPath);
+            boolean result = FmFileUtils.rename(mOperatorPaths.get(0), newPath);
             if (result) {
                 ToastUtils.showToast(mView.getContext(), "重命名成功！");
                 refresh();
                 if (this.mListView != null) {
-                    int position = FileUtils.getPositionInFileList(mFileItems, newPath) + 4;
+                    int position = FmFileUtils.getPositionInFileList(mFileItems, newPath) + 4;
                     mListView.setSelection(position);
                 }
                 mOperatorPaths.clear();
@@ -879,7 +833,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
         @Override
         public void onSelecteAll(View view, boolean selecteAll) {
-            FileUtils.selecteAll(mFileItems, !selecteAll);
+            FmFileUtils.selecteAll(mFileItems, !selecteAll);
             FileListPageFragmentHelper.refreshCheckList(mFileItems, mCheckedList);
             if (mBottomMenu.hasSelecteAll(mFileItems, mCheckedList)) {
                 mBottomMenu.setSelectNothing();
@@ -891,69 +845,5 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         }
     }
 
-    class CopyBottomBarListner implements IOnBottomChooserBarClickListener {
-
-        @Override
-        public void onEnsure(View v) {
-            mBottomMenu.hide();
-
-            try {
-                if (mService != null) {
-                    String dest = getCurrentPath();
-                    mService.start(mOperatorList, dest);
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onCancel(View v) {
-            // ToastUtils.showToast(mView.getContext(), "取消复制", 0);
-        }
-
-    }
-
-    private SimpleCopyFileCallback mCopyCallback = new SimpleCopyFileCallback() {
-        public void onFinish(long hasDeletedSize) throws RemoteException {
-            mHandler.sendEmptyMessage(MSG_REFRESH);
-        };
-
-    };
-
-    class CopyFileConnection implements ServiceConnection {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mService = ICopyFiles.Stub.asInterface(service);
-            if (mService != null) {
-                try {
-                    mService.registerCallback(mCopyCallback);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    }
-
-    class MoveBottonBarListner implements IOnBottomChooserBarClickListener {
-        @Override
-        public void onEnsure(View v) {
-            String targetPath = getCurrentPath();
-            int failCount = FileUtils.moveTo(mOperatorList, targetPath);
-            ToastUtils.showToast(mView.getContext(), "移动" + mOperatorList.size() + "个，失败" + failCount + "个");
-            mBottomMenu.hide();
-            refresh();
-        }
-
-        @Override
-        public void onCancel(View v) {
-            mOperatorList.clear();
-        }
-    }
 
 }

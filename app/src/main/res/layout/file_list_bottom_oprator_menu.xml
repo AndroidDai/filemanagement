@@ -50,8 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="2dp"
                 android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
                 android:src="@drawable/op_copy" />
 
             <TextView
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="2dp"
-                android:text="复制"
+                android:text="压缩"
                 android:textColor="@color/text_color_white" />
         </LinearLayout>
 
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="2dp"
-                android:text="移动"
+                android:text="解压"
                 android:textColor="@color/text_color_white" />
         </LinearLayout>
 

@@ -33,11 +33,9 @@ import com.dzh.filemanagement.dao.DaoFactory;
 import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.utils.DensityUtil;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.view.FileInfoDialog;
-
-import io.zhuliang.appchooser.AppChooser;
 
 
 public class ApksActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
@@ -77,7 +75,7 @@ public class ApksActivity extends AppCompatActivity implements OnItemClickListen
         mTvZipsTitle = (TextView) findViewById(R.id.mTvTopTitle);
         mTvZipsTitle.setText("在这里安装世界");
 
-        FileUtils.checkFile(mApks);
+        FmFileUtils.checkFile(mApks);
         Collections.sort(mApks, new SimpleFileComparator());
 
         mListView = (ListView) findViewById(R.id.mDocListView);

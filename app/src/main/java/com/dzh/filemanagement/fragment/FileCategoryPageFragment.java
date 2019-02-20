@@ -34,7 +34,7 @@ import com.dzh.filemanagement.core.common.MediaResourceManager;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.Audio;
 import com.dzh.filemanagement.entity.Video;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 import com.dzh.filemanagement.view.PieChart;
 import com.dzh.filemanagement.view.PieChart.OnSelectedLisenter;
@@ -340,7 +340,7 @@ public class FileCategoryPageFragment extends Fragment implements OnClickListene
                     String path = c.getString(dataindex);
 
                     if (FileType.isDocument(path)) {
-                        if (!FileUtils.isExists(path)) {
+                        if (!FmFileUtils.isExists(path)) {
                             continue;
                         }
                         mDocuments.add(path);
@@ -349,7 +349,7 @@ public class FileCategoryPageFragment extends Fragment implements OnClickListene
                         mAllCateSize += size;
                         mHandler.sendEmptyMessage(MSG_SET_OTHER_CATEGORY_COUNT);
                     } else if (FileType.isZip(path)) {
-                        if (!FileUtils.isExists(path)) {
+                        if (!FmFileUtils.isExists(path)) {
                             continue;
                         }
                         mZips.add(path);
@@ -358,7 +358,7 @@ public class FileCategoryPageFragment extends Fragment implements OnClickListene
                         mAllCateSize += size;
                         mHandler.sendEmptyMessage(MSG_SET_OTHER_CATEGORY_COUNT);
                     } else if (FileType.isApk(path)) {
-                        if (!FileUtils.isExists(path)) {
+                        if (!FmFileUtils.isExists(path)) {
                             continue;
                         }
                         mApks.add(path);

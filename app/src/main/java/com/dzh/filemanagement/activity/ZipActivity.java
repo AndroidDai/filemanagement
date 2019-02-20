@@ -37,8 +37,7 @@ import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.fragment.FileCategoryPageFragment;
 import com.dzh.filemanagement.utils.DensityUtil;
-import com.dzh.filemanagement.utils.FileUtils;
-import com.dzh.filemanagement.utils.OpenFileUtil;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.FileInfoDialog;
 
@@ -107,7 +106,7 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
             mViewNothing.setVisibility(View.GONE);
         }
 
-        FileUtils.checkFile(mZips);
+        FmFileUtils.checkFile(mZips);
         Collections.sort(mZips, new SimpleFileComparator());
 
         mListView = (ListView) findViewById(R.id.mDocListView);

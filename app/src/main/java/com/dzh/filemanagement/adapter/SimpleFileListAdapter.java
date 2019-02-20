@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.core.common.FileType;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -65,7 +65,7 @@ public class SimpleFileListAdapter extends BaseAdapter {
 
         imageView.setImageResource(FileType.getResourceIdByType(fileType));
 
-        textView.setText(FileUtils.getFileName(path));
+        textView.setText(FmFileUtils.getFileName(path));
 
         return view;
     }

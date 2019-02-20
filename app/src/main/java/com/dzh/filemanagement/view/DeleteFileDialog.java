@@ -28,7 +28,7 @@ import com.dzh.filemanagement.adapter.SimpleFileListAdapter;
 import com.dzh.filemanagement.core.engine.service.delete.DeleteFileService;
 import com.dzh.filemanagement.core.engine.service.delete.IDeleteFiles;
 import com.dzh.filemanagement.core.engine.service.delete.IDeleteFilesCallback;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 
 @SuppressLint("HandlerLeak")
@@ -68,7 +68,7 @@ public class DeleteFileDialog extends Dialog implements OnClickListener {
             } else if (msg.what == MSG_UPDATE) {
                 Holder holder = (Holder) msg.obj;
                 mProgressBar.setProgress(holder.progress);
-                mTvFileName.setText(FileUtils.getFileName(holder.fileName));
+                mTvFileName.setText(FmFileUtils.getFileName(holder.fileName));
                 mTvFileSize.setText(TextUtil.getSizeSting(holder.deleteSize) + "/" + TextUtil.getSizeSting(holder.allSize));
 
             } else if (msg.what == MSG_DEL_FINISH) {

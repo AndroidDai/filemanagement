@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.core.common.CMImageLoader;
 import com.dzh.filemanagement.core.common.FileType;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 
 public class FileInfoDialog extends Dialog implements OnClickListener {
@@ -135,7 +135,7 @@ public class FileInfoDialog extends Dialog implements OnClickListener {
             mImageFileInfo.setImageResource(resId);
         }
 
-        mTvFileInfoName.setText(FileUtils.getFileName(mFilePath));
+        mTvFileInfoName.setText(FmFileUtils.getFileName(mFilePath));
         mTvFileInfoPath.setText(mFilePath);
 
         setReadWrite(mFile);

@@ -7,13 +7,11 @@ import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.core.common.CMImageLoader;
 import com.dzh.filemanagement.core.common.MediaResourceManager;
 import com.dzh.filemanagement.entity.Audio;
-import com.dzh.filemanagement.utils.FileUtils;
-import com.dzh.filemanagement.utils.OpenFileUtil;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
@@ -108,7 +106,7 @@ public class AudioListViewAdapter extends BaseAdapter implements OnScrollListene
             holder.mImageAudio.setImageResource(R.drawable.type_mp3);
         }
         holder.mImageAudio.setTag(audio.getPath());
-        holder.mTvAudioName.setText(FileUtils.getFileName(audio.getPath()));
+        holder.mTvAudioName.setText(FmFileUtils.getFileName(audio.getPath()));
         holder.mTvAudioPath.setText(audio.getPath());
         File file = new File(audio.getPath());
         holder.mTvAudioModifyTime.setText(TextUtil.getDateStringString(file.lastModified()));

@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -41,7 +40,7 @@ import com.dzh.filemanagement.entity.Audio;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.fragment.FileCategoryPageFragment;
 import com.dzh.filemanagement.utils.DensityUtil;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.AudioInfoDialog;
@@ -254,7 +253,7 @@ public class AudioActivity extends BaseActivity implements OnItemClickListener, 
                 while (c.moveToNext()) {
                     String path = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));// 路径
 
-                    if (!FileUtils.isExists(path)) {
+                    if (!FmFileUtils.isExists(path)) {
                         continue;
                     }
 

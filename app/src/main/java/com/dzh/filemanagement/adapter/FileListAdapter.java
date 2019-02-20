@@ -28,7 +28,7 @@ import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.entity.SimplePackgeInfo;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 
 public class FileListAdapter extends BaseAdapter {
@@ -192,14 +192,14 @@ public class FileListAdapter extends BaseAdapter {
         holder.mTvCreateTime.setText(TextUtil.getDateStringString(info.getCreateTime()));
 
         if (info.getFileSize() == 0) {
-            info.setFileSize(FileUtils.getChildCount(info.getPath()));
+            info.setFileSize(FmFileUtils.getChildCount(info.getPath()));
         }
 
         // APP名字和大小
         if (info.getFileType() == FileType.TYPE_FOLDER) {
             // 设置App名字
             if (info.getAppName() == null) {
-                String appName = FileUtils.getAppNameFromMap(info.getName());
+                String appName = FmFileUtils.getAppNameFromMap(info.getName());
                 info.setAppName(appName);
             }
 

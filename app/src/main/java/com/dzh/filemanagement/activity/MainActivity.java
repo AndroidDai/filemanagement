@@ -1,8 +1,10 @@
 package com.dzh.filemanagement.activity;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.KeyEvent;
@@ -15,6 +17,8 @@ import com.dzh.filemanagement.fragment.IOnBackPressed;
 import com.dzh.filemanagement.fragment.LeftMenuFragment;
 import com.dzh.filemanagement.fragment.ViewPageFragment;
 import com.dzh.filemanagement.view.SlidingMenu;
+import com.github.dfqin.grantor.PermissionListener;
+import com.github.dfqin.grantor.PermissionsUtil;
 
 public class MainActivity extends BaseActivity {
 
@@ -28,6 +32,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+
         init();
         initListener();
     }

@@ -23,7 +23,7 @@ import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.Audio;
 import com.dzh.filemanagement.entity.Video;
 import com.dzh.filemanagement.fragment.FileCategoryPageFragment;
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 
 public class MediaResourceManager {
 
@@ -42,7 +42,7 @@ public class MediaResourceManager {
             while (c.moveToNext()) {
                 String path = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));// 路径
 
-                if (!FileUtils.isExists(path)) {
+                if (!FmFileUtils.isExists(path)) {
                     continue;
                 }
 
@@ -84,7 +84,7 @@ public class MediaResourceManager {
             c = mContentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
             while (c.moveToNext()) {
                 String path = c.getString(c.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));// 路径
-                if (!FileUtils.isExists(path)) {
+                if (!FmFileUtils.isExists(path)) {
                     continue;
                 }
 
@@ -124,7 +124,7 @@ public class MediaResourceManager {
             c = mContentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[] { "_id", "_data", "_size" }, null, null, null);
             while (c.moveToNext()) {
                 String path = c.getString(c.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-                if (!FileUtils.isExists(path)) {
+                if (!FmFileUtils.isExists(path)) {
                     continue;
                 }
                 long size = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE));

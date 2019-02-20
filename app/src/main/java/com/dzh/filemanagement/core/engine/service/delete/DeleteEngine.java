@@ -3,7 +3,7 @@ package com.dzh.filemanagement.core.engine.service.delete;
 import java.io.File;
 import java.util.List;
 
-import com.dzh.filemanagement.utils.FileUtils;
+import com.dzh.filemanagement.utils.FmFileUtils;
 
 import android.os.RemoteException;
 
@@ -96,7 +96,7 @@ public class DeleteEngine extends IDeleteFiles.Stub {
                 }
             }
 
-            mAllDeleteFileSize = FileUtils.getFileSize(mDeleteFiles);// 获取文件的总大小
+            mAllDeleteFileSize = FmFileUtils.getFileSize(mDeleteFiles);// 获取文件的总大小
             deleteFiles();
 
             if (mCallback != null) {

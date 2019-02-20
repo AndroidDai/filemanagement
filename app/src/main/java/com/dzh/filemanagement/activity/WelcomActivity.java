@@ -1,8 +1,10 @@
 package com.dzh.filemanagement.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -19,6 +21,8 @@ import com.dzh.filemanagement.utils.SharedPreferenceUtil;
 import com.dzh.filemanagement.view.FeatureAnimationListener;
 import com.dzh.filemanagement.view.IObservableScrollView;
 import com.dzh.filemanagement.view.IOnScrollChangedListener;
+import com.github.dfqin.grantor.PermissionListener;
+import com.github.dfqin.grantor.PermissionsUtil;
 
 public class WelcomActivity extends Activity implements OnClickListener, OnGlobalLayoutListener, IOnScrollChangedListener {
     private IObservableScrollView mScrollView;
@@ -33,7 +37,18 @@ public class WelcomActivity extends Activity implements OnClickListener, OnGloba
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome);
+        PermissionsUtil.requestPermission(this, new PermissionListener() {
+            @Override
+            public void permissionGranted(@NonNull String[] permissions) {
+                mBtnStart = (Button) findViewById(R.id.btn_start);
+                mBtnStart.setOnClickListener(WelcomActivity.this);
+            }
 
+            @Override
+            public void permissionDenied(@NonNull String[] permissions) {
+                finish();
+            }
+        }, Manifest.permission.WRITE_EXTERNAL_STORAGE , Manifest.permission.READ_EXTERNAL_STORAGE);
         mScrollView = (IObservableScrollView) this.findViewById(R.id.mSwelcomeScrollView);
         mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(this);
         mScrollView.setOnScrollChangedListener(this);
@@ -41,8 +56,7 @@ public class WelcomActivity extends Activity implements OnClickListener, OnGloba
         mAnimView = this.findViewById(R.id.anim1);
         mAnimView.setVisibility(View.INVISIBLE);
 
-        mBtnStart = (Button) findViewById(R.id.btn_start);
-        mBtnStart.setOnClickListener(this);
+
     }
 
     @Override
