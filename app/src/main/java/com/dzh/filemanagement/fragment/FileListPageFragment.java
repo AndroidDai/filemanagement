@@ -7,13 +7,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,24 +42,26 @@ import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.SharedPreferenceUtil;
-import com.dzh.filemanagement.utils.SysShareUtils;
 import com.dzh.filemanagement.utils.ToastUtils;
 import com.dzh.filemanagement.utils.UiUtil;
-import com.dzh.filemanagement.view.CopyBottomChooseBar;
+import com.dzh.filemanagement.utils.TimeUtils;
+import com.dzh.filemanagement.utils.ViLogUtils;
 import com.dzh.filemanagement.view.DeleteFileDialog;
 import com.dzh.filemanagement.view.FileInfoDialog;
 import com.dzh.filemanagement.view.FileListBottomOperatorMenu;
 import com.dzh.filemanagement.view.FileListBottomToolBar;
 import com.dzh.filemanagement.view.IOnDialogBtnClickListener;
 import com.dzh.filemanagement.view.IOnMenuItemClickListener;
-import com.dzh.filemanagement.view.MoveBottomChooseBar;
 import com.dzh.filemanagement.view.NewFileDialog;
 import com.dzh.filemanagement.view.RenameDialog;
 import com.dzh.filemanagement.view.SortDialog;
 import com.dzh.filemanagement.view.SwipListView;
 import com.dzh.filemanagement.view.SwipListView.OnSwipListItemRemoveListener;
-import com.github.dfqin.grantor.PermissionListener;
-import com.github.dfqin.grantor.PermissionsUtil;
+import com.snail.commons.entity.ZipHelper;
+import com.snail.commons.interfaces.Callback;
+import com.snail.commons.utils.SysShareUtils;
+
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -77,6 +78,9 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
     private static final int MSG_PRE_LOAD = 0x1004;
     private static final int MSG_GO_TO_SELECT = 0x1005;
     private static final int MSG_SHOW_PROGRESS = 0x1006;
+    private static final int MSG_SHOW_ZIPTOAST = 0x1007;
+    private static final int MSG_SHOW_UNZIP_SUCCESS = 0x1008;
+    private static final int MSG_SHOW_UNZIP_FAILURE = 0x1009;
 
     private List<SimpleFileInfo> mGlobalSimpleFileList = new ArrayList<SimpleFileInfo>();
 
@@ -96,8 +100,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
     private SwipListView mListView = null;
     private FileListBottomOperatorMenu mBottomMenu = null;// 底部弹出式操作菜单
     private FileListBottomToolBar mBottomToolBar = null;// 底部操作工具条
-    private CopyBottomChooseBar mCopyBottomChooseBar = null;// 底部确认取消按钮
-    private MoveBottomChooseBar mMoveBottomChooseBar = null;
     private Dialog mProgressDialog = null;
     private View mNothingView = null;
 
@@ -114,10 +116,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_SHOW_PROGRESS) {
-                if (mProgressDialog == null) {
-                    mProgressDialog = UiUtil.createLoadingDialog(mView.getContext(), "正在玩命加载...");
-                    mProgressDialog.show();
-                }
+                showProgress("正在玩命加载");
             } else if (msg.what == MSG_PRE_LOAD) {
                 mAdapter.notifyDataSetInvalidated();
             } else if (msg.what == MSG_UPDATE_DATA) {
@@ -140,10 +139,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                     mListView.setSelection(mLastTimePosition);
                     mLastTimePosition = 0;
                 }
-                if (mProgressDialog != null) {
-                    mProgressDialog.dismiss();
-                    mProgressDialog = null;
-                }
+                hideProgress();
 
             } else if (msg.what == MSG_REFRESH) {
                 refresh();
@@ -151,6 +147,27 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                 String targetPath = (String) msg.obj;
                 int position = FmFileUtils.getPositionInFileList(mFileItems, targetPath);
                 mListView.setSelection(position);
+            } else if (msg.what == MSG_SHOW_ZIPTOAST) {
+                Bundle bundle = msg.getData();
+                String path = bundle.getString("path");
+                ToastUtils.showToast(mActivity, "压缩后文件目录为：" + path);
+                hideProgress();
+
+            }
+            else if (msg.what == MSG_SHOW_UNZIP_SUCCESS) {
+                Bundle bundle = msg.getData();
+                String path = bundle.getString("path");
+                if (path == null){
+                    path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/filemanagement/unzip/";
+                }
+                ToastUtils.showToast(mActivity, "解压后文件目录为：" + path);
+                hideProgress();
+
+            }
+            else if (msg.what == MSG_SHOW_UNZIP_FAILURE) {
+                ToastUtils.showToast(mActivity, "解压失败");
+                hideProgress();
+
             }
         }
     };
@@ -227,18 +244,14 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         mActivity = (MainActivity) getActivity();
         mViewPageFragment = mActivity.getViewPageFragment();
 
-        mLinearTopNavi = (LinearLayout) mView.findViewById(R.id.mLinearTopNavi);
-        mTopNaviScroll = (HorizontalScrollView) mView.findViewById(R.id.mTopNaviScroll);
+        mLinearTopNavi = mView.findViewById(R.id.mLinearTopNavi);
+        mTopNaviScroll = mView.findViewById(R.id.mTopNaviScroll);
         mMenuOnclickListener = new BottomMenuOnclickListener(mCheckedList, mView, this, mAdapter);
-        mBottomMenu = (FileListBottomOperatorMenu) mView.findViewById(R.id.mBottomMenu);
-        mBottomToolBar = (FileListBottomToolBar) mView.findViewById(R.id.mBottomToolBar);
-        mCopyBottomChooseBar = (CopyBottomChooseBar) mView.findViewById(R.id.mBottomChooseBar);
-        mMoveBottomChooseBar = (MoveBottomChooseBar) mView.findViewById(R.id.mBottomMoveChooseBar);
+        mBottomMenu = mView.findViewById(R.id.mBottomMenu);
+        mBottomToolBar = mView.findViewById(R.id.mBottomToolBar);
         mNothingView = mView.findViewById(R.id.nothing);
-
-        mListView = (SwipListView) mView.findViewById(R.id.fileList);
+        mListView = mView.findViewById(R.id.fileList);
         mListView.setAdapter(mAdapter);
-
         mListView.setOnItemRemoveListener(this);
         mListView.setOnItemClickListener(this);
         ((MainActivity) getActivity()).setOnBackPressedListener(this);
@@ -366,7 +379,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         }
 
         // 如果在选择事件的模式
-        if (mBottomMenu.isShow() && !mCopyBottomChooseBar.isShow() && !mMoveBottomChooseBar.isShow()) {
+        if (mBottomMenu.isShow()) {
             SimpleFileInfo info = mFileItems.get(position);
             if (info.isChecked()) {
                 info.setChecked(false);
@@ -599,6 +612,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
                 case R.id.mOpDel:
                     deleteFiles();// 删除
+                    mBottomMenu.hide();
                     break;
 
                 case R.id.mOpMove:// 解压
@@ -718,13 +732,40 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
         // 解压
         private void unzip() {
-
             if (mCheckedList.size() == 0) {
                 ToastUtils.showToast(mView.getContext(), "请先选择一个要解压的文件");
                 return;
+            } else if (mCheckedList.size() != 1) {
+                ToastUtils.showToast(mView.getContext(), "一次只能解压一个压缩包");
+                return;
+            } else {
+                String path = mCheckedList.get(0);
+                File file = new File(path);
+                if (!file.isFile() || !file.getName().endsWith(".zip")) {
+                    ToastUtils.showToast(mView.getContext(), "不支持解压非zip文件或目录");
+                } else {
+                    final File filePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/filemanagement/unzip/" + file.getName());
+                    if (!filePath.exists()) {
+                        filePath.mkdirs();
+                    }
+                    showProgress("正在拼命解压");
+                    ZipHelper.INSTANCE.unzip().addZipFile(file).setTargetDir(filePath.getAbsolutePath()).execute(new Callback<Boolean>() {
+                        @Override
+                        public void onCallback(@Nullable Boolean obj) {
+                            Message msg = new Message();
+                            if (obj) {
+                                msg.what = MSG_SHOW_UNZIP_SUCCESS;
+                                Bundle bundle = new Bundle();
+                                bundle.putString("path", filePath.getAbsolutePath());
+                                msg.setData(bundle);
+                            } else {
+                                msg.what = MSG_SHOW_UNZIP_FAILURE;
+                            }
+                            mHandler.sendMessage(msg);
+                        }
+                    });
+                }
             }
-            mMoveBottomChooseBar.show();
-            mOperatorList = new ArrayList<String>(mCheckedList);
             mCheckedList.clear();
             FmFileUtils.selecteAll(mFileItems, false);
             mAdapter.notifyDataSetChanged();
@@ -732,13 +773,41 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
         // 压缩
         private void tozip() {
-
             if (mCheckedList.size() == 0) {
                 ToastUtils.showToast(mView.getContext(), "请先选择一个要压缩的文件");
                 return;
             }
-            mCopyBottomChooseBar.show();
-            mOperatorList = new ArrayList<String>(mCheckedList);
+            List<File> files = new ArrayList<>();
+            for (String path : mCheckedList) {
+                File file = new File(path);
+                files.add(file);
+            }
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/filemanagement/zip");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            String fileName = TimeUtils.getWorkTime(System.currentTimeMillis());
+            Callback<File> callback = new Callback<File>() {
+                @Override
+                public void onCallback(@Nullable File obj) {
+                    ViLogUtils.e("obj.getAbsolutePath():" + obj.getAbsolutePath());
+                }
+            };
+            showProgress("正在拼命压缩");
+            ZipHelper.INSTANCE.zip().addSourceFiles(files).setTarget(file.getAbsolutePath(), fileName).execute(new Callback<File>() {
+                @Override
+                public void onCallback(@Nullable File obj) {
+                    Message msg = new Message();
+                    msg.what = MSG_SHOW_ZIPTOAST;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("path", obj.getAbsolutePath());
+                    msg.setData(bundle);
+                    mHandler.sendMessage(msg);
+
+                }
+            });
+
+            mCheckedList.clear();
             FmFileUtils.selecteAll(mFileItems, false);
             mAdapter.notifyDataSetChanged();
         }
@@ -845,5 +914,17 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         }
     }
 
+    private void showProgress(String msg) {
+        if (mProgressDialog == null) {
+            mProgressDialog = UiUtil.createLoadingDialog(mView.getContext(), msg);
+            mProgressDialog.show();
+        }
+    }
 
+    private void hideProgress() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+    }
 }

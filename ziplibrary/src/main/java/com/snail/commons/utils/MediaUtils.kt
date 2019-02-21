@@ -1,4 +1,4 @@
-package com.dzh.filemanagement.utils
+package com.snail.commons.utils
 
 import android.content.ContentValues
 import android.content.Context
@@ -8,10 +8,9 @@ import android.provider.MediaStore
 import java.io.File
 
 /**
- * @author kevin
- * @version 1.0.0
- * @date 2019/2/20
- * @class
+ * 描述:
+ * 时间: 2018/9/27 23:18
+ * 作者: zengfansheng
  */
 object MediaUtils {
 

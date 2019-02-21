@@ -1,4 +1,4 @@
-package com.dzh.filemanagement.utils
+package com.snail.commons.utils
 
 import android.app.Activity
 import android.content.Context
@@ -6,13 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 /**
- * @author kevin
- * @version 1.0.0
- * @date 2019/2/20
- * @class
+ * 描述: 调用系统分享工具
+ * 时间: 2018/9/27 23:54
+ * 作者: zengfansheng
  */
 object SysShareUtils {
     private fun startShare(context: Context, intent: Intent, title: String, isFile: Boolean) {
@@ -110,7 +109,7 @@ object SysShareUtils {
      * @param title 系统分享对话框的标题
      * @param file 文件
      */
-    fun  shareFile(context: Context, title: String, file: File) {
+    fun shareFile(context: Context, title: String, file: File) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = FileUtils.getMimeType(file.absolutePath)
         intent.putExtra(Intent.EXTRA_STREAM, FileProviderUtils.getUriForFile(context, file))

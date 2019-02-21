@@ -1,4 +1,4 @@
-package com.dzh.filemanagement.utils
+package com.snail.commons.utils
 
 import android.content.ContentUris
 import android.content.Context
@@ -13,13 +13,6 @@ import java.nio.channels.FileChannel
 import java.text.DecimalFormat
 import java.util.*
 import java.util.zip.GZIPOutputStream
-
-/**
- * @author kevin
- * @version 1.0.0
- * @date 2019/2/20
- * @class
- */
 
 object FileUtils {
 
@@ -55,7 +48,7 @@ object FileUtils {
     fun getFileName(path: String): String {
         if ((path.contains("/") || path.contains("\\"))) {
             var fileName = path.trim { it <= ' ' }
-            var beginIndex = fileName.lastIndexOf("\\")
+            var beginIndex = fileName.lastIndexOf("\\")            
             if (beginIndex != -1) {
                 fileName = fileName.substring(beginIndex + 1)
             }
@@ -196,7 +189,7 @@ object FileUtils {
      * @return 按参数先后顺序返回一个字符串数组
      */
     fun removeDuplicate(dup: String, vararg strs: String): Array<String> {
-        val out = Array(strs.size) { "" }
+        val out = Array(strs.size) {""}
         for (i in strs.indices) {
             out[i] = strs[i].replace("$dup+".toRegex(), "")
         }
@@ -378,7 +371,7 @@ object FileUtils {
         if (!targetDir.exists()) {
             targetDir.mkdirs()
         }
-        // 获取源文件夹当前下的文件或目录
+        // 获取源文件夹当前下的文件或目录   
         val files = sourceDir.listFiles()
         for (file in files) {
             if (file.isFile) {
@@ -425,14 +418,14 @@ object FileUtils {
         try {
             bufferedInputStream = BufferedInputStream(inputStream)
             out = BufferedOutputStream(FileOutputStream(targetFile))
-            // 缓冲数组
+            // 缓冲数组   
             val b = ByteArray(1024 * 5)
             var len = bufferedInputStream.read(b)
             while (len != -1) {
                 out.write(b, 0, len)
                 len = bufferedInputStream.read(b)
             }
-            // 刷新此缓冲的输出流
+            // 刷新此缓冲的输出流   
             out.flush()
         } catch (e: Exception) {
             e.printStackTrace()

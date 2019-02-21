@@ -1,17 +1,17 @@
-package com.dzh.filemanagement.utils
+package com.snail.commons.utils
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
+
 import java.io.File
 
 /**
- * @author kevin
- * @version 1.0.0
- * @date 2019/2/20
- * @class
+ * 描述:
+ * 时间: 2018/6/9 09:09
+ * 作者: zengfansheng
  */
 object FileProviderUtils {
 

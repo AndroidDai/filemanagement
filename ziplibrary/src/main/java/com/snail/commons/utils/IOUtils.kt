@@ -1,13 +1,6 @@
-package com.dzh.filemanagement.utils
+package com.snail.commons.utils
 
 import java.io.*
-
-/**
- * @author kevin
- * @version 1.0.0
- * @date 2019/2/20
- * @class
- */
 
 object IOUtils {
     /**
