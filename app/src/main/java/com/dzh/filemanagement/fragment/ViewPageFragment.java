@@ -1,21 +1,22 @@
 package com.dzh.filemanagement.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.lmw.demo.slidingtab.widget.PagerSlidingTabStrip;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dzh.filemanagement.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 
 public class ViewPageFragment extends Fragment {
@@ -30,7 +31,7 @@ public class ViewPageFragment extends Fragment {
 
     private View mView = null;
     private PagerSlidingTabStrip mTabs = null;
-    public OnPageChangeListener mDelegatePageListener = null;
+    public ViewPager.OnPageChangeListener mDelegatePageListener = null;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -48,7 +49,7 @@ public class ViewPageFragment extends Fragment {
         mTabs.setViewPager(mViewPager);
         
 
-        mTabs.setOnPageChangeListener(new OnPageChangeListener() {
+        mTabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
 //                Toast.makeText(mView.getContext(), "位置" + position, 0).show();
@@ -158,7 +159,7 @@ public class ViewPageFragment extends Fragment {
         }
     }
 
-    public void setOnPageChangeListener(OnPageChangeListener listener) {
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
         this.mDelegatePageListener = listener;
     }
     

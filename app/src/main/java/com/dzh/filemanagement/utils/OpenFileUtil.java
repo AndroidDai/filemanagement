@@ -1,14 +1,10 @@
 package com.dzh.filemanagement.utils;
 
 import java.io.File;
-import java.util.Locale;
 
-import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Intent;
-import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import io.zhuliang.appchooser.AppChooser;
 

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +61,8 @@ import com.snail.commons.interfaces.Callback;
 import com.snail.commons.utils.SysShareUtils;
 
 import org.jetbrains.annotations.Nullable;
+
+import androidx.fragment.app.Fragment;
 
 
 /**
@@ -152,7 +153,9 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                 String path = bundle.getString("path");
                 ToastUtils.showToast(mActivity, "压缩后文件目录为：" + path);
                 hideProgress();
-
+                mBottomMenu.hide();
+                mCheckedList.clear();
+                mAdapter.notifyDataSetChanged();
             }
             else if (msg.what == MSG_SHOW_UNZIP_SUCCESS) {
                 Bundle bundle = msg.getData();
@@ -162,6 +165,9 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                 }
                 ToastUtils.showToast(mActivity, "解压后文件目录为：" + path);
                 hideProgress();
+                mBottomMenu.hide();
+                mCheckedList.clear();
+                mAdapter.notifyDataSetChanged();
 
             }
             else if (msg.what == MSG_SHOW_UNZIP_FAILURE) {
@@ -787,12 +793,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                 file.mkdirs();
             }
             String fileName = TimeUtils.getWorkTime(System.currentTimeMillis());
-            Callback<File> callback = new Callback<File>() {
-                @Override
-                public void onCallback(@Nullable File obj) {
-                    ViLogUtils.e("obj.getAbsolutePath():" + obj.getAbsolutePath());
-                }
-            };
             showProgress("正在拼命压缩");
             ZipHelper.INSTANCE.zip().addSourceFiles(files).setTarget(file.getAbsolutePath(), fileName).execute(new Callback<File>() {
                 @Override

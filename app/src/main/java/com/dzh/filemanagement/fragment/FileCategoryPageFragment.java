@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,6 +37,8 @@ import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
 import com.dzh.filemanagement.view.PieChart;
 import com.dzh.filemanagement.view.PieChart.OnSelectedLisenter;
+
+import androidx.fragment.app.Fragment;
 
 public class FileCategoryPageFragment extends Fragment implements OnClickListener, OnSelectedLisenter {
 

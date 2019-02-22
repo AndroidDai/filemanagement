@@ -21,11 +21,11 @@
         app:selectedTabTextColor="@color/color_red_1" >
     </org.lmw.demo.slidingtab.widget.PagerSlidingTabStrip>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#B847FF" >
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

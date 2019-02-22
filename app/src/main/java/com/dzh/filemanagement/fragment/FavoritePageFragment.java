@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +19,8 @@ import com.dzh.filemanagement.adapter.FavoriteListViewAdapter;
 import com.dzh.filemanagement.adapter.FileListAdapter.OnCheckBoxChangedListener;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.Favorite;
+
+import androidx.fragment.app.Fragment;
 
 public class FavoritePageFragment extends Fragment implements OnCheckBoxChangedListener, OnClickListener {
     private View mView = null;

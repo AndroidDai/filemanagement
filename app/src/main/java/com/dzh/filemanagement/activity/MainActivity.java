@@ -1,12 +1,9 @@
 package com.dzh.filemanagement.activity;
 
-import android.Manifest;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -17,8 +14,9 @@ import com.dzh.filemanagement.fragment.IOnBackPressed;
 import com.dzh.filemanagement.fragment.LeftMenuFragment;
 import com.dzh.filemanagement.fragment.ViewPageFragment;
 import com.dzh.filemanagement.view.SlidingMenu;
-import com.github.dfqin.grantor.PermissionListener;
-import com.github.dfqin.grantor.PermissionsUtil;
+
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends BaseActivity {
 
@@ -76,7 +74,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initListener() {
-        mViewPageFragment.setOnPageChangeListener(new OnPageChangeListener() {
+        mViewPageFragment.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {

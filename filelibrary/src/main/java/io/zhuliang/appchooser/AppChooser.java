@@ -1,12 +1,12 @@
 package io.zhuliang.appchooser;
 
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import io.zhuliang.appchooser.action.SendAction;
 import io.zhuliang.appchooser.action.ViewAction;
 

@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -38,8 +39,13 @@ import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.fragment.FileCategoryPageFragment;
 import com.dzh.filemanagement.utils.DensityUtil;
 import com.dzh.filemanagement.utils.FmFileUtils;
+import com.dzh.filemanagement.utils.ToastUtils;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.view.FileInfoDialog;
+import com.snail.commons.entity.ZipHelper;
+import com.snail.commons.interfaces.Callback;
+
+import org.jetbrains.annotations.Nullable;
 
 public class ZipActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
 
@@ -60,7 +66,7 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
     private int mChoosePosition = 0;
     private Dialog mProgressDialog = null;
     private ZipsLoadThread mThread = null;
-    
+
 
     private View mViewNothing = null;
     private Handler mHandler = new Handler() {
@@ -72,7 +78,7 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
             } else if (msg.what == MSG_UPDATE_DATA) {
                 mZips.add((String) msg.obj);
             } else if (msg.what == MSG_FINISH) {
-                
+
                 Collections.sort(mZips);
 
                 if (mProgressDialog != null) {
@@ -88,7 +94,9 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
                 mAdapter.notifyDataSetChanged();
             }
 
-        };
+        }
+
+        ;
     };
 
     @Override
@@ -131,12 +139,45 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String path = mZips.get(position);
-        File file = new File(path);
-
+        final File file = new File(path);
+        final File filePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/filemanagement/unzip/" + file.getName());
+        if (!filePath.exists()) {
+            filePath.mkdirs();
+        }
         if (file.exists()) {
-           // OpenFileUtil.openFile(path);  直接解压
+            // OpenFileUtil.openFile(path);  直接解压
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("是否解压该目录下文件");
+            builder.setMessage(path);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, int id) {
+                    ZipHelper.INSTANCE.unzip().addZipFile(file).setTargetDir(filePath.getAbsolutePath()).execute(new Callback<Boolean>() {
+                        @Override
+                        public void onCallback(@Nullable final Boolean obj) {
+                            ZipActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //此时已在主线程中，可以更新UI了
+                                    dialog.dismiss();
+                                    if (obj) {
+                                        ToastUtils.showToast(ZipActivity.this, "解压成功，解压后文件目录为：" + filePath.getAbsolutePath());
+                                    } else {
+                                        ToastUtils.showToast(ZipActivity.this, "解压失败" + filePath.getAbsolutePath());
+                                    }
+                                }
+                            });
 
+                        }
+                    });
 
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
         } else {
             Toast.makeText(this, "文件已经不存在了~~", Toast.LENGTH_SHORT).show();
         }
@@ -180,62 +221,62 @@ public class ZipActivity extends Activity implements OnItemClickListener, OnItem
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.mVideoPopInfo:
-            mPopupWindow.dismiss();
-            FileInfoDialog mInfoDialog = new FileInfoDialog(this, mZips.get(mChoosePosition), true);
-            mInfoDialog.show();
-            break;
-
-        case R.id.mVideoPopDelete:
-            mPopupWindow.dismiss();
-            String fileName = mZips.get(mChoosePosition);
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setTitle("提醒！").setMessage("你确定要删除 " + fileName + "吗？");
-            dialog.setNegativeButton("取消", null);
-            dialog.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    File file = new File(mZips.get(mChoosePosition));
-                    if (file.exists()) {
-                        file.delete();
-                        Toast.makeText(ZipActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                        mZips.remove(mChoosePosition);
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(ZipActivity.this, "很遗憾，没有帮您完成任务~~", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            dialog.show();
-            break;
-
-        case R.id.mVideoPopShare:
-            mPopupWindow.dismiss();
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            String filePath = mZips.get(mChoosePosition);
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
-            intent.setType("application/*");
-            intent.putExtra(Intent.EXTRA_SUBJECT, "文档分享");
-            intent.putExtra(Intent.EXTRA_TEXT, "我想分享给你浓缩的精华！");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(Intent.createChooser(intent, getTitle()));
-            break;
-        case R.id.mVideoPopFavorite:
-            mPopupWindow.dismiss();
-            FavoriteDao dao = DaoFactory.getFavoriteDao(this);
-            String path = mZips.get(mChoosePosition);
-            if (null != dao.findFavoriteByFullPath(path)) {
-                Toast.makeText(this, "已经在收藏夹中了,这个压缩包里面一定有秘密~~", Toast.LENGTH_SHORT).show();
+            case R.id.mVideoPopInfo:
+                mPopupWindow.dismiss();
+                FileInfoDialog mInfoDialog = new FileInfoDialog(this, mZips.get(mChoosePosition), true);
+                mInfoDialog.show();
                 break;
-            }
-            File file = new File(path);
-            Favorite favorite = new Favorite(path, file.getName(), "", FileType.TYPE_RAR, System.currentTimeMillis(), file.length(), "");
-            dao.insertFavorite(favorite);
-            Toast.makeText(this, "成功添加到收藏夹！", Toast.LENGTH_SHORT).show();
-            break;
 
-        default:
-            break;
+            case R.id.mVideoPopDelete:
+                mPopupWindow.dismiss();
+                String fileName = mZips.get(mChoosePosition);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("提醒！").setMessage("你确定要删除 " + fileName + "吗？");
+                dialog.setNegativeButton("取消", null);
+                dialog.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        File file = new File(mZips.get(mChoosePosition));
+                        if (file.exists()) {
+                            file.delete();
+                            Toast.makeText(ZipActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                            mZips.remove(mChoosePosition);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(ZipActivity.this, "很遗憾，没有帮您完成任务~~", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                dialog.show();
+                break;
+
+            case R.id.mVideoPopShare:
+                mPopupWindow.dismiss();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                String filePath = mZips.get(mChoosePosition);
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+                intent.setType("application/*");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "文档分享");
+                intent.putExtra(Intent.EXTRA_TEXT, "我想分享给你浓缩的精华！");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent, getTitle()));
+                break;
+            case R.id.mVideoPopFavorite:
+                mPopupWindow.dismiss();
+                FavoriteDao dao = DaoFactory.getFavoriteDao(this);
+                String path = mZips.get(mChoosePosition);
+                if (null != dao.findFavoriteByFullPath(path)) {
+                    Toast.makeText(this, "已经在收藏夹中了,这个压缩包里面一定有秘密~~", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                File file = new File(path);
+                Favorite favorite = new Favorite(path, file.getName(), "", FileType.TYPE_RAR, System.currentTimeMillis(), file.length(), "");
+                dao.insertFavorite(favorite);
+                Toast.makeText(this, "成功添加到收藏夹！", Toast.LENGTH_SHORT).show();
+                break;
+
+            default:
+                break;
         }
 
     }

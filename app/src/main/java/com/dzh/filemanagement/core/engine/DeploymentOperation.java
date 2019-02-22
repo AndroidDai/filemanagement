@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.dzh.filemanagement.core.common.FileType;
@@ -21,8 +20,6 @@ import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.dao.impl.FileAppNameDao;
 import com.dzh.filemanagement.dao.impl.FileTypeDao;
 import com.dzh.filemanagement.entity.Favorite;
-import com.github.dfqin.grantor.PermissionListener;
-import com.github.dfqin.grantor.PermissionsUtil;
 
 /**
  * 部署应用程序
