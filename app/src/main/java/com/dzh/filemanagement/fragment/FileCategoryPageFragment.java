@@ -24,8 +24,8 @@ import com.dzh.filemanagement.activity.ApksActivity;
 import com.dzh.filemanagement.activity.ApplicationsActivity;
 import com.dzh.filemanagement.activity.AudioActivity;
 import com.dzh.filemanagement.activity.DocumentsActivity;
+import com.dzh.filemanagement.activity.FileBrowseActivity;
 import com.dzh.filemanagement.activity.ImageWallActivity;
-import com.dzh.filemanagement.activity.MainActivity;
 import com.dzh.filemanagement.activity.VideoActivity;
 import com.dzh.filemanagement.activity.ZipActivity;
 import com.dzh.filemanagement.core.common.FileType;
@@ -75,7 +75,7 @@ public class FileCategoryPageFragment extends Fragment implements OnClickListene
     private static List<String> mDocuments = new ArrayList<String>();
     private static List<String> mZips = new ArrayList<String>();
 
-    private MainActivity mActivity = null;
+    private FileBrowseActivity mActivity = null;
     private ViewPageFragment mViewPageFragment = null;
     private FileListPageFragment mFileListPageFragment = null;
 
@@ -252,7 +252,7 @@ public class FileCategoryPageFragment extends Fragment implements OnClickListene
             e.printStackTrace();
         }
 
-        mActivity = (MainActivity) getActivity();
+        mActivity = (FileBrowseActivity) getActivity();
         mViewPageFragment = mActivity.getViewPageFragment();
         mFileListPageFragment = mViewPageFragment.getFileListPageFragment();
     }

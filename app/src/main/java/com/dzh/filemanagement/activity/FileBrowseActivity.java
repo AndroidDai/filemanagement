@@ -1,29 +1,21 @@
 package com.dzh.filemanagement.activity;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.SystemClock;
 
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.base.BaseActivity;
 import com.dzh.filemanagement.fragment.IOnBackPressed;
-import com.dzh.filemanagement.fragment.LeftMenuFragment;
 import com.dzh.filemanagement.fragment.ViewPageFragment;
-import com.dzh.filemanagement.view.SlidingMenu;
 
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-public class MainActivity extends BaseActivity {
+public class FileBrowseActivity extends BaseActivity {
 
-    SlidingMenu mSlidingMenu = null;
-    LeftMenuFragment mLeftFragment = null;
     ViewPageFragment mViewPageFragment = null;
-    ActionBar mActionBar = null;
     IOnBackPressed mOnBackPressed = null;// 点击回退键触发
     long[] mHits = new long[2];
 
@@ -51,21 +43,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void init() {
-        mSlidingMenu = (SlidingMenu) findViewById(R.id.slidingMenu);// 主布局(左中右)
-
-        View lefMenuView = getLayoutInflater().inflate(R.layout.left_frame, null);
-        View centerView = getLayoutInflater().inflate(R.layout.center_frame, null);
-        mSlidingMenu.addViews(lefMenuView, centerView);
-
-        // 替换左中右三页布局为Fragement
-        FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-        mLeftFragment = new LeftMenuFragment();
-        transaction.replace(R.id.left_frame, mLeftFragment);
 
         mViewPageFragment = new ViewPageFragment();
-        transaction.replace(R.id.center_frame, mViewPageFragment);
-
-        transaction.commit();
+        showFragment(R.id.center_frame , mViewPageFragment);
 
     }
 
@@ -78,7 +58,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                // Toast.makeText(MainActivity.this, "" + position, 0).show();
+                // Toast.makeText(FileBrowseActivity.this, "" + position, 0).show();
             }
 
             @Override
@@ -97,13 +77,6 @@ public class MainActivity extends BaseActivity {
         this.mOnBackPressed = listener;
     }
 
-    public void showLeft() {
-        mSlidingMenu.showLeftView();
-    }
-    
-    public void hideLeft() {
-        mSlidingMenu.hideLeft();
-    }
 
     @Override
     protected void onDestroy() {
@@ -119,11 +92,6 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            
-            if(mSlidingMenu.isShow()) {
-                mSlidingMenu.hideLeft();
-                return true;
-            }
 
             if (mViewPageFragment.getCurrentPageIndex() == 2) {
                 goToPage(1);
@@ -140,7 +108,7 @@ public class MainActivity extends BaseActivity {
                 	System.arraycopy(mHits, 1, mHits, 0, mHits.length -1);
                 	mHits[mHits.length - 1] = SystemClock.uptimeMillis();
                 	if(mHits[0] > ( SystemClock.uptimeMillis() - 500)) {
-                		MainActivity.this.finish();
+                		FileBrowseActivity.this.finish();
                 	} else {
                 		Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 	}

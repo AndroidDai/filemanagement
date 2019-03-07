@@ -23,7 +23,6 @@ public class ViewPageFragment extends Fragment {
 
     private FileListPageFragment mFileListPageFragment = null;
     private FileCategoryPageFragment mFileCategoryPageFragment = null;
-    private FavoritePageFragment mFavoritePageFragment = null;
 
     private ViewPagerAdapter mAdapter = null;
     private ViewPager mViewPager = null;
@@ -40,25 +39,20 @@ public class ViewPageFragment extends Fragment {
 
         mPagerItemList.add(mFileListPageFragment);
         mPagerItemList.add(mFileCategoryPageFragment);
-        mPagerItemList.add(mFavoritePageFragment);
 
-        mAdapter = new ViewPagerAdapter(getFragmentManager(), new String[] { "目录", "分类", "收藏" });
+        mAdapter = new ViewPagerAdapter(getFragmentManager(), new String[]{"目录", "分类"});
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mTabs = (PagerSlidingTabStrip) mView.findViewById(R.id.pageTabs);
         mTabs.setViewPager(mViewPager);
-        
+
 
         mTabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-//                Toast.makeText(mView.getContext(), "位置" + position, 0).show();
-                if(position == 2) {
-                    mFavoritePageFragment.reLoadFavoriteList();
-                    mFavoritePageFragment.startListAnim();
-                } else if (position == 0) {
+                if (position == 0) {
                     mFileListPageFragment.startAnim();
-                } else if(position == 1) {
+                } else if (position == 1) {
                     mFileCategoryPageFragment.startPieChartAnim();
                     mFileCategoryPageFragment.refreshUi();
                 }
@@ -83,7 +77,7 @@ public class ViewPageFragment extends Fragment {
         });
         return mView;
     }
-    
+
     public FileCategoryPageFragment getFileCategoryPageFragment() {
         return mFileCategoryPageFragment;
     }
@@ -91,7 +85,7 @@ public class ViewPageFragment extends Fragment {
     public List<Fragment> getPageFragments() {
         return mPagerItemList;
     }
-    
+
     public FileListPageFragment getFileListPageFragment() {
         return mFileListPageFragment;
     }
@@ -104,7 +98,6 @@ public class ViewPageFragment extends Fragment {
     private void initFragment() {
         mFileListPageFragment = new FileListPageFragment();
         mFileCategoryPageFragment = new FileCategoryPageFragment();
-        mFavoritePageFragment = new FavoritePageFragment();
 
     }
 
@@ -162,27 +155,27 @@ public class ViewPageFragment extends Fragment {
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
         this.mDelegatePageListener = listener;
     }
-    
+
     public int getCurrentPageIndex() {
         return mViewPager.getCurrentItem();
     }
 
     /**
      * 设置显示第几页
-     * 
+     *
      * @param position
      */
     public void setPage(int position) {
         mViewPager.setCurrentItem(position);
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        
-        if(mViewPager.getCurrentItem() == 1) {
+
+        if (mViewPager.getCurrentItem() == 1) {
             mFileCategoryPageFragment.refreshUi();
-            
+
         }
     }
 

@@ -30,7 +30,7 @@
         </provider>
 
         <activity
-            android:name="com.dzh.filemanagement.activity.MainActivity"
+            android:name="com.dzh.filemanagement.activity.FileBrowseActivity"
             android:label="@string/app_name"
              
             android:windowSoftInputMode="adjustPan"></activity>

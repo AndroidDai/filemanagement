@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dzh.filemanagement.R;
-import com.dzh.filemanagement.activity.MainActivity;
+import com.dzh.filemanagement.activity.FileBrowseActivity;
 import com.dzh.filemanagement.adapter.FileListAdapter.OnCheckBoxChangedListener;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.dao.DaoFactory;
@@ -36,7 +36,7 @@ public class FavoriteListViewAdapter extends BaseAdapter {
     private FileListPageFragment mFileListPageFragment = null;
     private ViewPageFragment mViewPageFragment = null;
 
-    public FavoriteListViewAdapter(Context mContext, List<Favorite> mFavorites, ListView listView, MainActivity activity) {
+    public FavoriteListViewAdapter(Context mContext, List<Favorite> mFavorites, ListView listView, FileBrowseActivity activity) {
         super();
         this.mContext = mContext;
         this.mFavorites = mFavorites;

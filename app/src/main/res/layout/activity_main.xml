@@ -4,10 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.dzh.filemanagement.view.SlidingMenu
-        android:id="@+id/slidingMenu"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
 
     <include
         android:id="@+id/nothing"
@@ -15,5 +11,9 @@
         android:layout_height="match_parent"
         layout="@layout/nothing"
         android:visibility="invisible" />
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/center_frame"
+        ></FrameLayout>
 </RelativeLayout>

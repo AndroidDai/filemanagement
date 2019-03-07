@@ -27,7 +27,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dzh.filemanagement.R;
-import com.dzh.filemanagement.activity.MainActivity;
+import com.dzh.filemanagement.activity.FileBrowseActivity;
 import com.dzh.filemanagement.adapter.FileListAdapter;
 import com.dzh.filemanagement.adapter.FileListAdapter.OnCheckBoxChangedListener;
 import com.dzh.filemanagement.core.common.FileComparator;
@@ -44,7 +44,6 @@ import com.dzh.filemanagement.utils.SharedPreferenceUtil;
 import com.dzh.filemanagement.utils.ToastUtils;
 import com.dzh.filemanagement.utils.UiUtil;
 import com.dzh.filemanagement.utils.TimeUtils;
-import com.dzh.filemanagement.utils.ViLogUtils;
 import com.dzh.filemanagement.view.DeleteFileDialog;
 import com.dzh.filemanagement.view.FileInfoDialog;
 import com.dzh.filemanagement.view.FileListBottomOperatorMenu;
@@ -94,7 +93,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
     public String mRootPath = ResourceManager.mExternalStoragePath;
 
     private View mView = null;
-    private MainActivity mActivity = null;
+    private FileBrowseActivity mActivity = null;
     private ViewPageFragment mViewPageFragment = null;
     private LinearLayout mLinearTopNavi = null;// 顶部目录导航
     private HorizontalScrollView mTopNaviScroll = null;// 顶部滚动部件
@@ -247,7 +246,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
 
     private void initView() {
 
-        mActivity = (MainActivity) getActivity();
+        mActivity = (FileBrowseActivity) getActivity();
         mViewPageFragment = mActivity.getViewPageFragment();
 
         mLinearTopNavi = mView.findViewById(R.id.mLinearTopNavi);
@@ -260,7 +259,7 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
         mListView.setAdapter(mAdapter);
         mListView.setOnItemRemoveListener(this);
         mListView.setOnItemClickListener(this);
-        ((MainActivity) getActivity()).setOnBackPressedListener(this);
+        ((FileBrowseActivity) getActivity()).setOnBackPressedListener(this);
 
     }
 
@@ -652,7 +651,6 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
                     break;
 
                 case R.id.mToolBarSetting:
-                    mActivity.showLeft();
                     break;
 
                 case R.id.mToolBarSort:
