@@ -1,7 +1,6 @@
 package com.dzh.filemanagement.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,9 +21,7 @@ import android.widget.Toast;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.utils.ACache;
-import com.dzh.filemanagement.utils.Fab;
-import com.gordonwong.materialsheetfab.MaterialSheetFab;
-import com.umeng.analytics.MobclickAgent;
+
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
@@ -41,7 +36,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FileActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.free_number)
@@ -57,18 +52,19 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
     private SharedPreferences mTable;
     private String mFreeS;
     private String mToalS;
-    private MaterialSheetFab materialSheetFab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_file);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
     }
 
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.file_toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
         mTable = getSharedPreferences("table", MODE_PRIVATE);
@@ -140,22 +136,7 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
         getFreeSpace();
         getTotalSpace();
 
-        Fab fab = (Fab) findViewById(R.id.fab);
-        View sheetView = findViewById(R.id.fab_sheet);
-        View overlay = findViewById(R.id.overlay);
-        int sheetColor = getResources().getColor(R.color.textColor2);
-        int fabColor = getResources().getColor(R.color.colorAccent);
-
-        // 初始化 material sheet FAB，搜索按钮
-        materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay,
-                sheetColor, fabColor);
-        TextView name_search = (TextView)findViewById(R.id.name_search);
-        TextView type_search = (TextView)findViewById(R.id.type_search);
-        type_search.setOnClickListener(this);
-        name_search.setOnClickListener(this);
-        MaterialRippleLayout.on(name_search).rippleColor(R.color.colorAccent).rippleOverlay(true).rippleAlpha((float) 0.7).create();
-        MaterialRippleLayout.on(type_search).rippleColor(R.color.colorAccent).rippleOverlay(true).rippleAlpha((float) 0.7).create();
-    }
+   }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -163,56 +144,6 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
         final Intent intent = new Intent();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         switch (v.getId()) {
-            case R.id.name_search:
-                final EditText userId = new EditText(this);
-                userId.setHint("请输入关键字");
-                userId.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-                builder.setTitle("请输入文件名：")
-                        .setCancelable(false)
-                        .setNegativeButton("取消", null)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String FileName = userId.getText().toString().trim();
-                                if (FileName.equals("")) {
-                                    Toast.makeText(FileActivity.this, "输入不能为空", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Intent intent = new Intent(FileActivity.this, ShowActivity.class);
-                                    intent.putExtra("class", "filename");
-                                    intent.putExtra("filename",FileName);
-                                    startActivity(intent);
-                                }
-                            }
-                        })
-                        .setView(userId, 150, 17, 70, 20)
-                        .show();
-                materialSheetFab.hideSheet();
-                break;
-            case R.id.type_search:
-                final EditText type_id = new EditText(this);
-                type_id.setHint("例如:mp4");
-                type_id.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-                builder.setTitle("请输入文件类型：")
-                        .setCancelable(false)
-                        .setNegativeButton("取消", null)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String FileType = type_id.getText().toString().trim();
-                                if (FileType.equals("")) {
-                                    Toast.makeText(FileActivity.this, "输入不能为空", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Intent intent = new Intent(FileActivity.this, ShowActivity.class);
-                                    intent.putExtra("class", "filetype");
-                                    intent.putExtra("filetype",FileType);
-                                    startActivity(intent);
-                                }
-                            }
-                        })
-                        .setView(type_id, 150, 17, 70, 20)
-                        .show();
-                materialSheetFab.hideSheet();
-                break;
             case R.id.file_image:
                 intent.setClass(this, ShowActivity.class);
                 intent.putExtra("class", "image");
@@ -244,13 +175,11 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.file_bottom:
-                intent.setClass(this, MemoryActivity.class);
-                intent.putExtra("total", mToalS);
-                intent.putExtra("free", mFreeS);
+                intent.setClass(this, FileBrowseActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_clear:
-                ACache mCatch = ACache.get(FileActivity.this);
+                ACache mCatch = ACache.get(MainActivity.this);
                 mCatch.clear();
                 SharedPreferences table = getSharedPreferences("table", MODE_PRIVATE);
                 SharedPreferences.Editor edit = table.edit();
@@ -267,41 +196,23 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "已经是最新版本", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_about:
-                startActivity(new Intent(FileActivity.this, AboutActivity.class));
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             case R.id.menu_quit:
                 finish();
                 break;
             case R.id.menu_title:
-                Toast.makeText(this, "别瞎点，我只是一排文字。", Toast.LENGTH_SHORT).show();
+
                 break;
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        mTable = getSharedPreferences("table", MODE_PRIVATE);
-        switch (item.getItemId()) {
-            case R.id.toolbar_find:
-                isNight = mTable.getBoolean("night", false);
-                if (isNight) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    mTable.edit().putBoolean("night", false).apply();
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    mTable.edit().putBoolean("night", true).apply();
-                }
-                recreate();
-                break;
-        }
-        return true;
-    }
 
     //    获取总的内存空间并控制显示
     public void getTotalSpace() {
@@ -345,10 +256,7 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
                 mAnimation.close();
                 return true;
             }
-            if (materialSheetFab.isSheetVisible()) {
-                materialSheetFab.hideSheet();
-                return true;
-            }
+
 
             if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
@@ -372,7 +280,7 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
                         getTotalSpace();
                         getFreeSpace();
                         mSwipeRefreshLayout.setRefreshing(false);
-                        Toast.makeText(FileActivity.this, "内存信息更新完成。", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "内存信息更新完成。", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -381,11 +289,11 @@ public class FileActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+
     }
 
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+
     }
 }

@@ -68,6 +68,14 @@
              
              ></activity>
         <activity
+            android:name="com.dzh.filemanagement.activity.MainActivity"
+
+            ></activity>
+        <activity
+            android:name="com.dzh.filemanagement.activity.ShowActivity"
+
+            ></activity>
+        <activity
             android:name="com.dzh.filemanagement.activity.WelcomActivity"
              
              ></activity>
@@ -91,14 +99,7 @@
                 <action android:name="com.cmcm.greendamexplorer.core.engine.service.delete.DeleteFileService" />
             </intent-filter>
         </service>
-        <service
-            android:name="com.dzh.filemanagement.core.engine.service.copy.CopyFileService"
-            android:exported="false"
-            android:process=":remote">
-            <intent-filter>
-                <action android:name="com.cmcm.greendamexplorer.core.engine.service.copy.CopyFileService" />
-            </intent-filter>
-        </service>
+
     </application>
 
 </manifest>

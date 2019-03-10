@@ -102,7 +102,7 @@ public class WelcomActivity extends Activity implements OnClickListener, OnGloba
         case R.id.btn_start:
             if (SharedPreferenceUtil.getFirstTimeUse()) {
                 SharedPreferenceUtil.setFirstTimeUse(false);
-                Intent intent = new Intent(WelcomActivity.this, FileBrowseActivity.class);
+                Intent intent = new Intent(WelcomActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 finish();
                 startActivity(intent);

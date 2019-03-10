@@ -34,7 +34,7 @@ public class FileBrowseActivity extends BaseActivity {
 
     @Override
     protected int getContentView() {
-        return R.layout.activity_main;
+        return R.layout.activity_file_browse;
     }
 
     @Override
@@ -105,13 +105,7 @@ public class FileBrowseActivity extends BaseActivity {
                 boolean needExit = mOnBackPressed.onBackPressed();
                 System.out.println(needExit);
                 if (needExit) {
-                	System.arraycopy(mHits, 1, mHits, 0, mHits.length -1);
-                	mHits[mHits.length - 1] = SystemClock.uptimeMillis();
-                	if(mHits[0] > ( SystemClock.uptimeMillis() - 500)) {
-                		FileBrowseActivity.this.finish();
-                	} else {
-                		Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                	}
+                    FileBrowseActivity.this.finish();
                 } else {
                     return true;
                 }

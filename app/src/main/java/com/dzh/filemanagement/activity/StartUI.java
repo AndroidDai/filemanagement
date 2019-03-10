@@ -29,7 +29,7 @@ public class StartUI extends Activity {
 
                 @Override
                 public void run() {
-                    Intent mainIntent = new Intent(StartUI.this, FileBrowseActivity.class);
+                    Intent mainIntent = new Intent(StartUI.this, MainActivity.class);
                     startActivity(mainIntent);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
                     finish();
