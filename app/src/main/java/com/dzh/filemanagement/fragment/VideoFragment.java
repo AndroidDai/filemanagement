@@ -2,77 +2,159 @@ package com.dzh.filemanagement.fragment;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.blankj.utilcode.utils.FileUtils;
 import com.bumptech.glide.Glide;
-
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dzh.filemanagement.R;
+import com.dzh.filemanagement.activity.ShowActivity;
+import com.dzh.filemanagement.adapter.ImageAdapter;
 import com.dzh.filemanagement.adapter.VideoAdapter;
-import com.dzh.filemanagement.utils.ACache;
-import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
+import com.dzh.filemanagement.base.ViBaseFragment;
+import com.dzh.filemanagement.core.common.MediaResourceManager;
+import com.dzh.filemanagement.entity.Video;
+import com.dzh.filemanagement.utils.OpenFileUtil;
+import com.dzh.filemanagement.utils.TimeUtils;
+import com.dzh.filemanagement.utils.ToastUtils;
+import com.dzh.filemanagement.view.DeleteFileDialog;
+import com.dzh.filemanagement.view.IOnDialogBtnClickListener;
+import com.snail.commons.entity.ZipHelper;
+import com.snail.commons.interfaces.Callback;
+import com.snail.commons.utils.SysShareUtils;
 import com.yalantis.taurus.PullToRefreshView;
-
-
+import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class VideoFragment extends Fragment {
-
+public class VideoFragment extends ViBaseFragment implements View.OnClickListener{
     private RecyclerView mRecyclerView;
-    private List<File> mFiles;
+    private List<Video> datas;
     private VideoAdapter mAdapter;
-    private PullToRefreshView mPullToRefreshView;
-    private Gson mGson;
     private ImageView mLoading;
     private TextView mLoadingText;
-    private ACache mCatch;
-    private SharedPreferences mPreferences;
-
+    private TextView mSelectPrompt;
+    private RelativeLayout rl_bottom;
+    private PullToRefreshView mPullToRefreshView;
+    private Context mContext;
+    private ShowActivity mActivity;
+    private Boolean isSelect = false;
+    public static final int MSG_LOAD_SUEECSS = 0x1000;
+    protected static final int MSG_REFRESH_SUEECSS = 0x1001;
+    protected static final int MSG_FAILURE = 0x1002;
+    protected static final int MSG_SHOW_ZIPTOAST = 0x1003;
     private Handler myHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1:
-                    mRecyclerView.setAdapter(mAdapter = new VideoAdapter(getContext(), mFiles));
+                case MSG_LOAD_SUEECSS:
+                    mAdapter.setNewData(datas);
                     mLoading.setVisibility(View.INVISIBLE);
                     mLoadingText.setVisibility(View.INVISIBLE);
                     mPullToRefreshView.setVisibility(View.VISIBLE);
                     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                    mAdapter.setOnItemClickLitener(new VideoAdapter.OnItemClickLitener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                        }
-
-                        @Override
-                        public void onItemLongClick(View view, int position) {
-                        }
-                    });
+                    break;
+                case MSG_REFRESH_SUEECSS:
+                    mAdapter.setNewData(datas);
+                    mPullToRefreshView.setVisibility(View.VISIBLE);
+                    mPullToRefreshView.setRefreshing(false);
+                    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                    break;
+                case MSG_FAILURE:
+                    datas.clear();
+                    mAdapter.setNewData(datas);
+                    mLoading.setVisibility(View.VISIBLE);
+                    break;
+                case MSG_SHOW_ZIPTOAST:
+                    mAdapter.deselectAll();
+                    Bundle bundle = msg.getData();
+                    String path = bundle.getString("path");
+                    ToastUtils.showToast(mContext, "压缩后文件目录为：" + path);
+                    mActivity.hideProgress();
                     break;
             }
             super.handleMessage(msg);
         }
     };
+
+
+    @Override
+    protected void initView(View view) {
+        super.initView(view);
+        mContext = getActivity();
+        TextView title = (TextView) mRootView.findViewById(R.id.title);
+        title.setText("视频");
+        mLoading = (ImageView) mRootView.findViewById(R.id.loading_gif);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
+        mLoadingText = (TextView) mRootView.findViewById(R.id.loading_text);
+        mPullToRefreshView = (PullToRefreshView) mRootView.findViewById(R.id.pull_to_refresh);
+        rl_bottom = mRootView.findViewById(R.id.rl_file_select);
+        mSelectPrompt = mRootView.findViewById(R.id.file_select);
+        Glide.with(getContext()).load(R.drawable.loading)
+                .asGif().into(mLoading);
+        datas = new ArrayList<>();
+        mAdapter = new VideoAdapter(datas, mContext);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager( new LinearLayoutManager(mContext));
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        initData(true);
+        initListener();
+    }
+
+    public void initListener() {
+
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData(false);
+            }
+        });
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (isSelect) {
+                    mAdapter.toggleSelection(position);
+                } else {
+                    OpenFileUtil.openFile(datas.get(position).getPath() , mActivity);
+                }
+            }
+        });
+        mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                if (!isSelect) {
+                    isSelect = true;
+                    mSelectPrompt.setText("取消");
+                    rl_bottom.setVisibility(View.VISIBLE);
+                }
+                mAdapter.toggleSelection(position);
+                return true;
+            }
+        });
+        mRootView.findViewById(R.id.file_delete).setOnClickListener(this);
+        mRootView.findViewById(R.id.file_zip).setOnClickListener(this);
+        mRootView.findViewById(R.id.file_share).setOnClickListener(this);
+        mRootView.findViewById(R.id.return_index).setOnClickListener(this);
+        mSelectPrompt.setOnClickListener(this);
+    }
 
     public VideoFragment() {
         // Required empty public constructor
@@ -80,131 +162,145 @@ public class VideoFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View ret = inflater.inflate(R.layout.fragment_video, container, false);
-        
-        TextView title = (TextView) ret.findViewById(R.id.title);
-        title.setText("视频");
-        ImageView reicon = (ImageView)ret.findViewById(R.id.return_index);
-        reicon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
-        
-        mLoading = (ImageView) ret.findViewById(R.id.loading_gif);
-        mRecyclerView = (RecyclerView) ret.findViewById(R.id.id_recyclerview);
-        mLoadingText = (TextView) ret.findViewById(R.id.loading_text);
-        mPullToRefreshView = (PullToRefreshView) ret.findViewById(R.id.pull_to_refresh);
-        Glide.with(getContext()).load(R.drawable.loading)
-                .asGif().into(mLoading);
-        mFiles = new ArrayList<>();
-        mGson = new Gson();
-        mCatch = ACache.get(getContext());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mFiles = FileUtils.listFilesInDirWithFilter(Environment.getExternalStorageDirectory(), ".mp4");
-                        addCatch();
-                        try {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    mAdapter.notifyDataSetChanged();
-                                    mPullToRefreshView.setRefreshing(false);
-                                    Toast.makeText(getContext(), "刷新完成", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }catch (Exception e){
-                            
-                        }
-                    }
-                }).start();
-
-            }
-        });
-        initDate();
-        return ret;
+    protected int getContentView() {
+        return R.layout.fragment_video;
     }
 
-    private void initDate() {
+
+    private void initData(final boolean isLoad) {
         //开线程初始化数据
         new Thread(new Runnable() {
             @Override
             public void run() {
-                judge();
+                List<Video> imagesFromMedia = MediaResourceManager.getVideosFromMedia();
+                datas.clear();
+                datas.addAll(imagesFromMedia);
                 Message message = new Message();
-                message.what = 1;
+                if (isLoad) {
+                    message.what = MSG_LOAD_SUEECSS;
+                } else {
+                    message.what = MSG_REFRESH_SUEECSS;
+                }
+
                 myHandler.sendMessage(message);
             }
         }).start();
     }
 
-    private void judge() {
-        try {
-            mPreferences = getContext().getSharedPreferences("table", Context.MODE_PRIVATE);
-        } catch (Exception e) {
-            //子线程未销毁可能时执行
-        }
 
-        boolean first = mPreferences.getBoolean("firstVideo", true);
-        int num = mPreferences.getInt("numVideo", 0);
+    @Override
+    public void onClick(View view) {
 
-        long time = mPreferences.getLong("VideoTime", 0);
-        long cha = System.currentTimeMillis() - time;
-        //判断缓存时间是否过期
-
-        if (!first && time != 0 & cha < 86400000) {
-            for (int i = 0; i < num; i++) {
-                String s = String.valueOf(i);
-                String string = mCatch.getAsString(s + "video");
-                if (string!=null) {
-                    Log.d("aaa", "judge: " +string);
-                    File file = mGson.fromJson(string, File.class);
-                    mFiles.add(file);
+        switch (view.getId()) {
+            case R.id.file_delete:
+                delect();
+                break;
+            case R.id.file_zip:
+                tozip();
+                break;
+            case R.id.file_share:
+                HashSet<Integer> selection = mAdapter.getSelection();
+                int size = selection.size();
+                if (size == 1) {
+                    String filePath = datas.get(0).getPath();
+                    SysShareUtils.INSTANCE.shareFile(mContext, "文件分享", new File(filePath));
+                } else if (size == 1) {
+                    ToastUtils.showToast(mContext, "请选择要分享的文件");
+                } else {
+                    ToastUtils.showToast(mContext, "分享文件个数不能超过1个");
                 }
+                break;
+            case R.id.return_index:
+                getActivity().finish();
+                break;
+            case R.id.file_select:
+                if (isSelect) {
+                    mSelectPrompt.setText("开始选择");
+                    mAdapter.deselectAll();
+                    rl_bottom.setVisibility(View.GONE);
+                } else {
+                    mSelectPrompt.setText("取消");
+                    rl_bottom.setVisibility(View.VISIBLE);
+                }
+                isSelect = !isSelect;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 压缩
+     */
+    private void tozip() {
+        HashSet<Integer> selection = mAdapter.getSelection();
+        int size = selection.size();
+        if (size == 0) {
+            ToastUtils.showToast(mContext, "请先选择一个要压缩的文件");
+            return;
+        }
+        List<File> files = new ArrayList<>();
+        for (Integer integer : selection) {
+            File file = new File(datas.get(integer).getPath());
+            files.add(file);
+        }
+        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/filemanagement/zip");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String fileName = TimeUtils.getWorkTime(System.currentTimeMillis());
+        mActivity.showProgress("正在拼命压缩");
+        ZipHelper.INSTANCE.zip().addSourceFiles(files).setTarget(file.getAbsolutePath(), fileName).execute(new Callback<File>() {
+            @Override
+            public void onCallback(@Nullable File obj) {
+                Message msg = new Message();
+                msg.what = MSG_SHOW_ZIPTOAST;
+                Bundle bundle = new Bundle();
+                bundle.putString("path", file.getAbsolutePath());
+                msg.setData(bundle);
+                myHandler.sendMessage(msg);
+
             }
-        } else {
-    
-            mFiles = FileUtils.listFilesInDirWithFilter(Environment.getExternalStorageDirectory(), ".mp4");
-            addCatch();
-        }
+        });
+
     }
 
-    private void addCatch() {
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < mFiles.size(); i++) {
-            String s = mGson.toJson(mFiles.get(i));
-            strings.add(s);
-        }
-        for (int i = 0; i < strings.size(); i++) {
-            String s = String.valueOf(i);
-            mCatch.put(s + "video", strings.get(i), ACache.TIME_DAY);
+    /**
+     * 删除文件
+     */
+    private void delect() {
+        HashSet<Integer> selection = mAdapter.getSelection();
+        int size = selection.size();
+        if (size == 0) {
+            ToastUtils.showToast(mContext, "请先选择一个要删除的文件");
+            return;
         }
 
+        List<String> mSelectList = new ArrayList<>();
+        for (Integer integer : selection) {
+            mSelectList.add(datas.get(integer).getPath());
+        }
+        DeleteFileDialog dialog = new DeleteFileDialog(mContext, getActivity(), mSelectList);
+        dialog.setOnDialogBtnClickListener(new IOnDialogBtnClickListener() {
+            @Override
+            public void onOkClick(View view, String result) {
+                mAdapter.deselectAll();
+                initData(false);
+            }
 
-        SharedPreferences.Editor edit = mPreferences.edit();
-        edit.putBoolean("firstVideo", false);
-        edit.putInt("numVideo", strings.size());
-        edit.putLong("VideoTime", System.currentTimeMillis());
-        edit.commit();
+            @Override
+            public void onCancelClick(View view) {
+
+            }
+        });
+        dialog.show();
     }
 
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart("Video_Fragment"); //统计页面，"MainScreen"为页面名称，可自定义
+    @Override
+    public void onAttach(Context context) {
+        mContext = context;
+        mActivity = (ShowActivity) getActivity();
+        super.onAttach(context);
     }
 
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd("Video_Fragment");
-    }
 }

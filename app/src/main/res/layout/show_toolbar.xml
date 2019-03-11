@@ -21,4 +21,16 @@
         android:gravity="center_vertical"
         android:textColor="#fff"
         android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/file_select"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:textColor="#fff"
+        android:layout_alignParentRight="true"
+        android:text="开始选择"
+        android:paddingRight="@dimen/x10"
+        android:textSize="16sp" />
 </RelativeLayout>

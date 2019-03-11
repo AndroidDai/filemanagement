@@ -9,6 +9,7 @@ import java.util.Stack;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -925,4 +926,5 @@ public class FileListPageFragment extends Fragment implements OnSwipListItemRemo
             mProgressDialog = null;
         }
     }
+
 }

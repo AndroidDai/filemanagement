@@ -1,58 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="7dp"
-    >
+    android:layout_marginTop="7dp">
 
-    <com.mcxtzhang.swipemenulib.SwipeMenuLayout
+
+    <LinearLayout
+        android:id="@+id/video_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        >
+        android:background="@color/BColor"
+        android:orientation="horizontal"
+        android:padding="7dp">
 
-        <LinearLayout
-            android:id="@+id/video_linear"
-            android:layout_width="match_parent"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/BColor"
-            android:orientation="horizontal"
-            android:padding="7dp"
-            >
+            app:cardCornerRadius="3dp">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="3dp">
-
-                <ImageView
-                    android:id="@+id/file_video_icon"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:background="#000"
-                    android:src="@mipmap/file_video"
-                    android:padding="2dp"/>
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/item_video_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="fileame"
-                android:textColor="@color/textColor"/>
-
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/file_video_icon"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="#000"
+                android:padding="2dp"
+                android:src="@mipmap/file_video" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/file_video_delete"
-            style="@style/file_item_select"
-            android:background="#ff0000"
-            android:text="删除"
-            android:textSize="21sp"/>
-    </com.mcxtzhang.swipemenulib.SwipeMenuLayout>
+            android:id="@+id/item_video_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/x8"
+            android:text="fileame"
+            android:textColor="@color/textColor" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x82"
+        android:layout_marginLeft="@dimen/x2"
+        android:layout_marginTop="@dimen/x1"
+        android:layout_marginRight="@dimen/x2"
+        android:background="@drawable/shape_album_select_sel" />
 </androidx.cardview.widget.CardView>

@@ -1,5 +1,6 @@
 package com.dzh.filemanagement.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import com.dzh.filemanagement.R;
@@ -11,6 +12,7 @@ import com.dzh.filemanagement.fragment.MusicFragment;
 import com.dzh.filemanagement.fragment.VideoFragment;
 import com.dzh.filemanagement.fragment.WordFragment;
 import com.dzh.filemanagement.fragment.ZipFragment;
+import com.dzh.filemanagement.utils.UiUtil;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -55,15 +57,19 @@ public class ShowActivity extends AppCompatActivity {
         }
         transaction.commit();
     }
-
-    public void onResume() {
-        super.onResume();
-
+    private Dialog mProgressDialog = null;
+    public void showProgress(String msg) {
+        if (mProgressDialog == null) {
+            mProgressDialog = UiUtil.createLoadingDialog(this, msg);
+            mProgressDialog.show();
+        }
     }
 
-    public void onPause() {
-        super.onPause();
-
+    public void hideProgress() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 
 }

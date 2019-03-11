@@ -13,4 +13,6 @@
     <include layout="@layout/show_toolbar"/>
 
     <include layout="@layout/show_list"/>
+
+    <include layout="@layout/show_bottom_bar"/>
 </LinearLayout>
