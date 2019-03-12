@@ -3,44 +3,34 @@ package com.dzh.filemanagement.fragment;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.blankj.utilcode.utils.FileUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.activity.ShowActivity;
 import com.dzh.filemanagement.adapter.ApkAdapter;
-import com.dzh.filemanagement.adapter.WordAdapter;
 import com.dzh.filemanagement.base.ViBaseFragment;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.core.common.MediaResourceManager;
-import com.dzh.filemanagement.utils.ACache;
 import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.TimeUtils;
 import com.dzh.filemanagement.utils.ToastUtils;
 import com.dzh.filemanagement.view.DeleteFileDialog;
 import com.dzh.filemanagement.view.IOnDialogBtnClickListener;
-import com.google.gson.Gson;
 import com.snail.commons.entity.ZipHelper;
 import com.snail.commons.interfaces.Callback;
 import com.snail.commons.utils.SysShareUtils;
-import com.umeng.analytics.MobclickAgent;
 import com.yalantis.taurus.PullToRefreshView;
 
 import org.jetbrains.annotations.Nullable;
@@ -53,10 +43,8 @@ import java.util.List;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
  * A simple {@link Fragment} subclass.

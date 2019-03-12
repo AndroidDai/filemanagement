@@ -5,20 +5,18 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.utils.ViUIUtils;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * 父类Activity
@@ -26,8 +24,7 @@ import com.dzh.filemanagement.utils.ViUIUtils;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
-    protected TextView tv_title_bar_left, tv_title_bar_title, tv_title_bar_right;
-    protected ImageView iv_title_bar_left, iv_title_bar_right;
+
     private FragmentManager fragmentManager;
     //当前正在展示的Fragment
     private Fragment showFragment;
@@ -56,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         //获得fragmentManager对象
         fragmentManager = getSupportFragmentManager();
-        initTitleBar();
+
 
         initView();
         Resources res = this.getResources();
@@ -92,61 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
-    /**
-     * 初始化titleBar
-     */
-    protected void initTitleBar() {
-        tv_title_bar_left = findViewById(R.id.tv_title_bar_left);
-        tv_title_bar_title = findViewById(R.id.tv_title_bar_title);
-        tv_title_bar_right = findViewById(R.id.tv_title_bar_right);
-        iv_title_bar_left = findViewById(R.id.iv_title_bar_left);
-        iv_title_bar_right = findViewById(R.id.iv_title_bar_right);
-    }
 
-    /**
-     * titleBar相关状态
-     *
-     * @param title_bar_left       左侧TextView的文字
-     * @param title_bar_title      居中的title文字
-     * @param title_bar_right      右侧的Textview的文字
-     * @param drawable_right       右侧的Imageview的图片
-     * @param drawable_left        左侧的Imageview的图片
-     * @param leftImageVisibility  左侧Imageview是否显示隐藏
-     * @param leftTextVisibility   左侧TextView是否显示隐藏
-     * @param rightImageVisibility 右侧的Imageview是否显示隐藏
-     * @param rightTextVisibility  右侧的TextView的是否显示隐藏
-     */
-    protected void titleBarStatus(String title_bar_title, String title_bar_left, int leftTextVisibility,
-                                  int rightTextVisibility, String title_bar_right,
-                                  int drawable_left, int leftImageVisibility,
-                                  int drawable_right, int rightImageVisibility) {
 
-        iv_title_bar_left.setVisibility(leftImageVisibility);
-        tv_title_bar_left.setVisibility(leftTextVisibility);
-        tv_title_bar_left.setText(title_bar_left);
-        tv_title_bar_title.setText(title_bar_title);
-        iv_title_bar_left.setImageResource(drawable_left);
-
-        tv_title_bar_right.setVisibility(rightTextVisibility);
-        tv_title_bar_right.setText(title_bar_right);
-        iv_title_bar_right.setVisibility(rightImageVisibility);
-        iv_title_bar_right.setImageResource(drawable_right);
-
-    }
-
-    protected void setTitle(String title_bar_title) {
-        tv_title_bar_title.setText(title_bar_title);
-    }
-
-    protected void activityFinsh() {
-        iv_title_bar_right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-
-            }
-        });
-    }
 
 
     @Override

@@ -1,10 +1,10 @@
 package com.dzh.filemanagement.utils;
 
-import com.dzh.filemanagement.core.engine.DeploymentOperation;
-
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+
+import com.dzh.filemanagement.core.engine.DeploymentOperation;
 
 public class DensityUtil {
 

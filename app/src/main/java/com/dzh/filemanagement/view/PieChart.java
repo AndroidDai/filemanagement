@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.dzh.filemanagement.R;
+
+import java.util.ArrayList;
 
 
 public class PieChart extends View {

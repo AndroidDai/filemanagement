@@ -1,14 +1,14 @@
 package com.dzh.filemanagement.fragment;
 
 
-import org.lmw.demo.slidingtab.widget.PagerSlidingTabStrip;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dzh.filemanagement.R;
+
+import org.lmw.demo.slidingtab.widget.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ViewPageFragment extends Fragment {
         mPagerItemList.add(mFileListPageFragment);
         mPagerItemList.add(mFavoritePageFragment);
 
-        mAdapter = new ViewPagerAdapter(getFragmentManager(), new String[]{"目录", "分类"});
+        mAdapter = new ViewPagerAdapter(getFragmentManager(), new String[]{"目录", "收藏"});
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mTabs = (PagerSlidingTabStrip) mView.findViewById(R.id.pageTabs);

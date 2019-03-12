@@ -1,11 +1,11 @@
 package com.dzh.filemanagement.core.engine.service.delete;
 
-import java.io.File;
-import java.util.List;
+import android.os.RemoteException;
 
 import com.dzh.filemanagement.utils.FmFileUtils;
 
-import android.os.RemoteException;
+import java.io.File;
+import java.util.List;
 
 public class DeleteEngine extends IDeleteFiles.Stub {
 

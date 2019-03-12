@@ -1,10 +1,10 @@
 package com.dzh.filemanagement.core.common;
 
-import java.util.Locale;
-
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.core.engine.DeploymentOperation;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.util.Locale;
 
 public abstract class FileType {
     public static final int TYPE_FOLDER = -1;

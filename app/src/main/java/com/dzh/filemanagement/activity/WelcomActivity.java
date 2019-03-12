@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -23,6 +22,8 @@ import com.dzh.filemanagement.view.IObservableScrollView;
 import com.dzh.filemanagement.view.IOnScrollChangedListener;
 import com.github.dfqin.grantor.PermissionListener;
 import com.github.dfqin.grantor.PermissionsUtil;
+
+import androidx.annotation.NonNull;
 
 public class WelcomActivity extends Activity implements OnClickListener, OnGlobalLayoutListener, IOnScrollChangedListener {
     private IObservableScrollView mScrollView;

@@ -1,8 +1,5 @@
 package com.dzh.filemanagement.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +7,9 @@ import android.util.Log;
 
 import com.dzh.filemanagement.dao.db.BaseDbDAO;
 import com.dzh.filemanagement.entity.Favorite;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 收藏夹操作

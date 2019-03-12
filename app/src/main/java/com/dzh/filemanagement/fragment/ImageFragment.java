@@ -204,7 +204,7 @@ public class ImageFragment extends ViBaseFragment implements View.OnClickListene
                 if (size == 1) {
                     String filePath = datas.get(0);
                     SysShareUtils.INSTANCE.shareFile(mContext, "文件分享", new File(filePath));
-                } else if (size == 1) {
+                } else if (size == 0) {
                     ToastUtils.showToast(mContext, "请选择要分享的文件");
                 } else {
                     ToastUtils.showToast(mContext, "分享文件个数不能超过1个");

@@ -1,16 +1,16 @@
 package com.dzh.filemanagement.dao.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.dao.db.BaseDbDAO;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileAppNameDao extends BaseDbDAO {
 

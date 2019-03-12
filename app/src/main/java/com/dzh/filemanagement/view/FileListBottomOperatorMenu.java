@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.util.List;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -16,6 +14,8 @@ import android.widget.TextView;
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.utils.DensityUtil;
+
+import java.util.List;
 
 public class FileListBottomOperatorMenu extends LinearLayout implements OnClickListener {
 

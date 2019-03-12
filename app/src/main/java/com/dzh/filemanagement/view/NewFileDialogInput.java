@@ -1,10 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -25,6 +20,11 @@ import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.fragment.FileListPageFragment;
 import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressLint("HandlerLeak")
 public class NewFileDialogInput extends Dialog implements TextWatcher, OnClickListener {

@@ -1,12 +1,7 @@
 package com.dzh.filemanagement.fragment;
 
 
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,11 +13,13 @@ import android.widget.TextView;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.activity.FileBrowseActivity;
-import com.dzh.filemanagement.activity.MainActivity;
 import com.dzh.filemanagement.adapter.FavoriteListViewAdapter;
 import com.dzh.filemanagement.adapter.FileListAdapter;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.Favorite;
+
+import java.util.Collections;
+import java.util.List;
 
 import androidx.fragment.app.Fragment;
 

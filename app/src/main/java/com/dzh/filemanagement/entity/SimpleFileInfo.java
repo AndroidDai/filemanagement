@@ -1,10 +1,10 @@
 package com.dzh.filemanagement.entity;
 
-import java.util.Locale;
-
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.exception.IllegalFilePath;
+
+import java.util.Locale;
 
 /**
  * 简单的文件描述

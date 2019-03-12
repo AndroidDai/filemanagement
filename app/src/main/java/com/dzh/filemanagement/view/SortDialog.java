@@ -1,8 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,6 +12,9 @@ import com.dzh.filemanagement.adapter.FileListAdapter;
 import com.dzh.filemanagement.core.common.FileComparator;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.utils.SharedPreferenceUtil;
+
+import java.util.Collections;
+import java.util.List;
 
 public class SortDialog extends Dialog implements OnClickListener {
 

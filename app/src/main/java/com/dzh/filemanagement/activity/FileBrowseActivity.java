@@ -1,15 +1,12 @@
 package com.dzh.filemanagement.activity;
 
 import android.os.Bundle;
-import android.os.SystemClock;
-
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.base.BaseActivity;
-import com.dzh.filemanagement.fragment.IOnBackPressed;
 import com.dzh.filemanagement.fragment.ViewPageFragment;
+import com.dzh.filemanagement.utils.IOnBackPressed;
 
 import androidx.viewpager.widget.ViewPager;
 

@@ -1,10 +1,10 @@
 package com.dzh.filemanagement.core.common;
 
-import java.util.Comparator;
-import java.util.Locale;
-
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.utils.SharedPreferenceUtil;
+
+import java.util.Comparator;
+import java.util.Locale;
 
 public class FileComparator implements Comparator<SimpleFileInfo> {
     public static final int SORT_TYPE_BY_NAME_UP = 0;

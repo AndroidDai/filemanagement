@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.util.List;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +11,8 @@ import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.fragment.FileListPageFragment;
+
+import java.util.List;
 
 public class NewFileDialog extends Dialog implements OnClickListener {
     // private static final String TAG = "NewFileDialog";

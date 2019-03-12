@@ -2,29 +2,17 @@
 <resources>
 
     <color name="white">#FFFFFF</color>
-    <color name="blue">#08d386</color>
     <color name="colorTheme">#08d386</color>
-    <color name="no_color">#00000000</color>
-    <color name="black">#000000</color>
-    <color name="text_color">#434343</color>
-    <color name="text_yellow">#ff6e1f</color>
-    <color name="black_half">#50000000</color>
-    
+
     <!-- 背景颜色 -->
     <color name="bg_light">#F9F9F9</color>
     <color name="bg_light_2">#fafbff</color>
-    <color name="bg_light_deep">#E5E5E5</color>
-    <color name="bg_dark">#3d3d3d</color>
-    <color name="bg_light_dark">#595959</color>
-    
+
     <!-- 常用颜色 -->
     <color name="color_red_1">#E74C37</color>
     <color name="color_green_1">#08d386</color>
     <color name="color_green_2">#18bc9a</color>
-    <color name="color_green_360">#0ab044</color>
     <color name="colorPrimary">#08d386</color>
-    <color name="colorPrimaryDark">#036cfc</color>
-    <color name="colorAccent">#FF504d</color>
     <color name="backGround">#eae7dd</color>
     <color name="textColor">#1d1d1d</color>
     <color name="textColor2">#ffffff</color>
@@ -34,37 +22,10 @@
     <!-- 菜单颜色 -->
     
     <!-- 文字颜色 -->
-    <color name="text_color_green">#08d386</color>
     <color name="text_color_white">#fff</color>
     <color name="text_color_balck">#000</color>
     <color name="text_color_light_black">#595959</color>
-    
-    
-    <color name="background_tab_pressed">#8833B5E5</color>
-    
-    <color name="theme1_darker_color">#ff0a463a</color>
-    <color name="theme1_dark_color">#ff1a8868</color>
-    <color name="theme1_primary_color">#1abc9c</color>
-    <color name="theme1_light_color">#ff1bf0cf</color>
 
-    <integer-array name="custom_theme_1">
-        <item>@color/theme1_darker_color</item>
-        <item>@color/theme1_dark_color</item>
-        <item>@color/theme1_primary_color</item>
-        <item>@color/theme1_light_color</item>
-    </integer-array>
-
-    <color name="theme2_darker_color">#ff40af1d</color>
-    <color name="theme2_dark_color">#ff2d3a88</color>
-    <color name="theme2_primary_color">#ffbc5357</color>
-    <color name="theme2_light_color">#ffb7b3f0</color>
-
-    <integer-array name="custom_theme_2">
-        <item>@color/theme2_darker_color</item>
-        <item>@color/theme2_dark_color</item>
-        <item>@color/theme2_primary_color</item>
-        <item>@color/theme2_light_color</item>
-    </integer-array>
 
     <!-- sand -->
     <color name="sand_darker">#ad843d</color>

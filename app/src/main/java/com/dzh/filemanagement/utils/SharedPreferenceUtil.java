@@ -1,11 +1,11 @@
 package com.dzh.filemanagement.utils;
 
-import com.dzh.filemanagement.core.common.FileComparator;
-import com.dzh.filemanagement.core.engine.DeploymentOperation;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+
+import com.dzh.filemanagement.core.common.FileComparator;
+import com.dzh.filemanagement.core.engine.DeploymentOperation;
 
 public class SharedPreferenceUtil {
     private static final String PREFERENCE_NAME_BASIC_CONFIG = "basic_config";

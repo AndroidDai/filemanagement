@@ -15,8 +15,6 @@
 
 package org.lmw.demo.slidingtab.widget;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -38,6 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dzh.filemanagement.R;
+
+import java.util.Locale;
 
 import androidx.viewpager.widget.ViewPager;
 

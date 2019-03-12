@@ -36,38 +36,6 @@
              
             android:windowSoftInputMode="adjustPan"></activity>
         <activity
-            android:name="com.dzh.filemanagement.activity.ImageWallActivity"
-             
-             ></activity>
-        <activity
-            android:name="com.dzh.filemanagement.activity.VideoActivity"
-             
-             ></activity>
-        <activity
-            android:name="com.dzh.filemanagement.activity.AudioActivity"
-             
-             ></activity>
-        <activity
-            android:name="com.dzh.filemanagement.activity.DocumentsActivity"
-             
-             ></activity>
-        <activity
-            android:name="com.dzh.filemanagement.activity.ZipActivity"
-             
-             ></activity>
-        <activity
-            android:name="com.dzh.filemanagement.activity.ApplicationsActivity"
-             
-             ></activity>
-        <activity
-            android:name="com.dzh.filemanagement.activity.ApksActivity"
-             
-            android:theme="@style/AppTheme"></activity>
-        <activity
-            android:name="com.dzh.filemanagement.activity.AboutMeActivity"
-             
-             ></activity>
-        <activity
             android:name="com.dzh.filemanagement.activity.MainActivity"
 
             ></activity>

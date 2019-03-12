@@ -1,9 +1,9 @@
 package com.dzh.filemanagement.fragment;
 
-import java.util.List;
-
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.view.FileListBottomOperatorMenu;
+
+import java.util.List;
 
 /**
  * FileListPageFragment 的辅助类

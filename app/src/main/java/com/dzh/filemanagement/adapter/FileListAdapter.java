@@ -1,9 +1,5 @@
 package com.dzh.filemanagement.adapter;
 
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,6 +26,10 @@ import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.entity.SimplePackgeInfo;
 import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FileListAdapter extends BaseAdapter {
 

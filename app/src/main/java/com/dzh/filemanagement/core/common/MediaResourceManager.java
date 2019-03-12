@@ -1,15 +1,8 @@
 package com.dzh.filemanagement.core.common;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,8 +15,13 @@ import com.dzh.filemanagement.core.engine.DeploymentOperation;
 import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.Audio;
 import com.dzh.filemanagement.entity.Video;
-import com.dzh.filemanagement.fragment.FileCategoryPageFragment;
 import com.dzh.filemanagement.utils.FmFileUtils;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MediaResourceManager {
 
@@ -36,7 +34,7 @@ public class MediaResourceManager {
         List<Audio> audios = new ArrayList<Audio>();
         Cursor c = null;
         try {
-            FileCategoryPageFragment.mAllAudioSize = 0;
+
             c = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 
             while (c.moveToNext()) {
@@ -54,7 +52,6 @@ public class MediaResourceManager {
                 String tilte = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)); // 歌曲名
                 long date = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
                 int albumId = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-                FileCategoryPageFragment.mAllAudioSize += size;
 
                 Audio audio = new Audio(id, path, tilte, artist, album, albumId, duration, size);
                 audios.add(audio);
@@ -78,7 +75,6 @@ public class MediaResourceManager {
 
         Cursor c = null;
         try {
-            FileCategoryPageFragment.mAllVideoSize = 0;
             // String[] mediaColumns = { "_id", "_data", "_display_name",
             // "_size", "date_modified", "duration", "resolution" };
             c = mContentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
@@ -94,8 +90,6 @@ public class MediaResourceManager {
                 long size = c.getLong(c.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));// 大小
                 long duration = c.getLong(c.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));// 时间
                 long date = c.getLong(c.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED));
-
-                FileCategoryPageFragment.mAllVideoSize += size;
 
                 Video video = new Video(id, path, name, resolution, size, date, duration);
                 videos.add(video);
@@ -120,7 +114,6 @@ public class MediaResourceManager {
         ArrayList<String> pictures = new ArrayList<String>();
         Cursor c = null;
         try {
-            FileCategoryPageFragment.mAllPictureSize = 0;
             c = mContentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[] { "_id", "_data", "_size" }, null, null, null);
             while (c.moveToNext()) {
                 String path = c.getString(c.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
@@ -128,7 +121,6 @@ public class MediaResourceManager {
                     continue;
                 }
                 long size = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE));
-                FileCategoryPageFragment.mAllPictureSize += size;
                 pictures.add(path);
             }
         } catch (Exception e) {
@@ -205,10 +197,6 @@ public class MediaResourceManager {
         return bluetooths;
     }
 
-    public static int getApplicationCount() {
-        PackageManager pm = DeploymentOperation.getAppContext().getPackageManager();
-        return pm.getInstalledApplications(PackageManager.GET_ACTIVITIES).size();
-    }
 
     // 获取视频缩略图
     public static Bitmap getVideoThumbnail(int id) {

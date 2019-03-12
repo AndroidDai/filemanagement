@@ -1,12 +1,5 @@
 package com.dzh.filemanagement.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.util.Log;
 
 import com.dzh.filemanagement.core.common.FileType;
@@ -15,6 +8,13 @@ import com.dzh.filemanagement.core.engine.ResourceManager;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.exception.IllegalFilePath;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FmFileUtils {
 

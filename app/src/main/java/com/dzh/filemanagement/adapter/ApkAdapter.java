@@ -2,20 +2,16 @@ package com.dzh.filemanagement.adapter;
 
 
 import android.content.Context;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dzh.filemanagement.R;
-import com.dzh.filemanagement.entity.Video;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by ddd on 2016/12/7.

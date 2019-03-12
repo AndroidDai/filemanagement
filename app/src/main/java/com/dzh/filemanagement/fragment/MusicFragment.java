@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.activity.ShowActivity;
-import com.dzh.filemanagement.adapter.ImageAdapter;
 import com.dzh.filemanagement.adapter.MusicAdapter;
 import com.dzh.filemanagement.base.ViBaseFragment;
 import com.dzh.filemanagement.core.common.MediaResourceManager;
@@ -28,11 +28,14 @@ import com.snail.commons.entity.ZipHelper;
 import com.snail.commons.interfaces.Callback;
 import com.snail.commons.utils.SysShareUtils;
 import com.yalantis.taurus.PullToRefreshView;
+
 import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;

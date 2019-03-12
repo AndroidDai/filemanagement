@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -15,6 +16,7 @@ import com.dzh.filemanagement.utils.FmFileUtils;
 
 import java.util.HashSet;
 import java.util.List;
+
 import androidx.annotation.Nullable;
 
 /**

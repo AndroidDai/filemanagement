@@ -1,15 +1,7 @@
 package com.dzh.filemanagement.fragment;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -40,11 +32,12 @@ import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.entity.NaviInfo;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.utils.FmFileUtils;
+import com.dzh.filemanagement.utils.IOnBackPressed;
 import com.dzh.filemanagement.utils.OpenFileUtil;
 import com.dzh.filemanagement.utils.SharedPreferenceUtil;
+import com.dzh.filemanagement.utils.TimeUtils;
 import com.dzh.filemanagement.utils.ToastUtils;
 import com.dzh.filemanagement.utils.UiUtil;
-import com.dzh.filemanagement.utils.TimeUtils;
 import com.dzh.filemanagement.view.DeleteFileDialog;
 import com.dzh.filemanagement.view.FileInfoDialog;
 import com.dzh.filemanagement.view.FileListBottomOperatorMenu;
@@ -61,6 +54,13 @@ import com.snail.commons.interfaces.Callback;
 import com.snail.commons.utils.SysShareUtils;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Stack;
 
 import androidx.fragment.app.Fragment;
 

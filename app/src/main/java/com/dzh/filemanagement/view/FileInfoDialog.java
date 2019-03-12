@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -22,6 +20,8 @@ import com.dzh.filemanagement.core.common.CMImageLoader;
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.io.File;
 
 public class FileInfoDialog extends Dialog implements OnClickListener {
 

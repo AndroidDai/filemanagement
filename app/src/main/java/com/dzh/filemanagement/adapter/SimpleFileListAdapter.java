@@ -1,12 +1,5 @@
 package com.dzh.filemanagement.adapter;
 
-import java.io.File;
-import java.util.List;
-
-import com.dzh.filemanagement.R;
-import com.dzh.filemanagement.core.common.FileType;
-import com.dzh.filemanagement.utils.FmFileUtils;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.dzh.filemanagement.R;
+import com.dzh.filemanagement.core.common.FileType;
+import com.dzh.filemanagement.utils.FmFileUtils;
+
+import java.io.File;
+import java.util.List;
 
 public class SimpleFileListAdapter extends BaseAdapter {
 

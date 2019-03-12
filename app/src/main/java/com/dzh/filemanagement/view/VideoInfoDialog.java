@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -17,6 +15,8 @@ import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.core.common.MediaResourceManager;
 import com.dzh.filemanagement.entity.Video;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.io.File;
 
 public class VideoInfoDialog extends Dialog implements OnClickListener {
     private static final int RESULT_VIDEO = 0x1001;

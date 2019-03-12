@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.util.List;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.text.Editable;
@@ -16,6 +14,8 @@ import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.entity.SimpleFileInfo;
 import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.util.List;
 
 public class RenameDialog extends Dialog implements TextWatcher, OnClickListener{
     private View mView = null;

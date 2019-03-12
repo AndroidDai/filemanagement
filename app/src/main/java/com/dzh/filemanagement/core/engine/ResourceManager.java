@@ -1,9 +1,5 @@
 package com.dzh.filemanagement.core.engine;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -19,6 +15,10 @@ import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.entity.SimplePackgeInfo;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResourceManager {
     private static ResourceManager mManager = null;

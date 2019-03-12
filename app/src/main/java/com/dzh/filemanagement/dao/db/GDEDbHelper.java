@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.dao.db;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.dzh.filemanagement.core.engine.DeploymentOperation;
 import com.dzh.filemanagement.log.GDLog;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 获取greendamexplorer.db数据库操作接口

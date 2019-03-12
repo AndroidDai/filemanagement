@@ -1,7 +1,5 @@
 package com.dzh.filemanagement.view;
 
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,6 +28,8 @@ import com.dzh.filemanagement.core.engine.service.delete.IDeleteFiles;
 import com.dzh.filemanagement.core.engine.service.delete.IDeleteFilesCallback;
 import com.dzh.filemanagement.utils.FmFileUtils;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.util.List;
 
 @SuppressLint("HandlerLeak")
 public class DeleteFileDialog extends Dialog implements OnClickListener {

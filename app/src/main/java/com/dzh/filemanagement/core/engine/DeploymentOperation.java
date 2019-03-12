@@ -1,15 +1,8 @@
 package com.dzh.filemanagement.core.engine;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
-import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.dzh.filemanagement.core.common.FileType;
@@ -20,6 +13,12 @@ import com.dzh.filemanagement.dao.impl.FavoriteDao;
 import com.dzh.filemanagement.dao.impl.FileAppNameDao;
 import com.dzh.filemanagement.dao.impl.FileTypeDao;
 import com.dzh.filemanagement.entity.Favorite;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  * 部署应用程序

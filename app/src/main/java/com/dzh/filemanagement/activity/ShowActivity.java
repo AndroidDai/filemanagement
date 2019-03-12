@@ -5,16 +5,12 @@ import android.os.Bundle;
 
 import com.dzh.filemanagement.R;
 import com.dzh.filemanagement.fragment.ApkFragment;
-import com.dzh.filemanagement.fragment.FileNameFragment;
-import com.dzh.filemanagement.fragment.FileTypeFragment;
 import com.dzh.filemanagement.fragment.ImageFragment;
 import com.dzh.filemanagement.fragment.MusicFragment;
 import com.dzh.filemanagement.fragment.VideoFragment;
 import com.dzh.filemanagement.fragment.WordFragment;
 import com.dzh.filemanagement.fragment.ZipFragment;
 import com.dzh.filemanagement.utils.UiUtil;
-import com.umeng.analytics.MobclickAgent;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -48,12 +44,7 @@ public class ShowActivity extends AppCompatActivity {
             case "zip":
                 transaction.add(R.id.show_detial, new ZipFragment());
                 break;
-            case "filename":
-                transaction.add(R.id.show_detial,new FileNameFragment());
-                break;
-            case "filetype":
-                transaction.add(R.id.show_detial,new FileTypeFragment());
-                break;
+
         }
         transaction.commit();
     }

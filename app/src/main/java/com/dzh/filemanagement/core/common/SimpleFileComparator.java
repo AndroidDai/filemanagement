@@ -1,6 +1,7 @@
 package com.dzh.filemanagement.core.common;
 
 import android.annotation.SuppressLint;
+
 import java.util.Comparator;
 
 public class SimpleFileComparator implements Comparator<String>{

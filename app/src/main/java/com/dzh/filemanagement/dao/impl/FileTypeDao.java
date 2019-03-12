@@ -1,14 +1,14 @@
 package com.dzh.filemanagement.dao.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.dzh.filemanagement.core.common.FileType;
 import com.dzh.filemanagement.dao.db.BaseDbDAO;
 import com.dzh.filemanagement.log.GDLog;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileTypeDao extends BaseDbDAO {
 

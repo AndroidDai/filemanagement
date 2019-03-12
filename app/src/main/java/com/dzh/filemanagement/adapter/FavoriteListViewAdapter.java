@@ -1,8 +1,5 @@
 package com.dzh.filemanagement.adapter;
 
-import java.io.File;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -27,6 +24,9 @@ import com.dzh.filemanagement.entity.Favorite;
 import com.dzh.filemanagement.fragment.FileListPageFragment;
 import com.dzh.filemanagement.fragment.ViewPageFragment;
 import com.dzh.filemanagement.utils.TextUtil;
+
+import java.io.File;
+import java.util.List;
 
 public class FavoriteListViewAdapter extends BaseAdapter {
     private Context mContext = null;
