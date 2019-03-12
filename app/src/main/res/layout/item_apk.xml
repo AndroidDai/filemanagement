@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:translationZ="5dp"
-    >
+    android:translationZ="5dp">
 
-    <com.mcxtzhang.swipemenulib.SwipeMenuLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
+        android:layout_height="@dimen/x120"
+        android:layout_gravity="center"
+        android:gravity="center"
         >
 
         <LinearLayout
-            android:id="@+id/apk_linear"
+            android:id="@+id/music_linear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/BColor"
+            android:gravity="center"
+            android:layout_centerInParent="true"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/apk_icon"
                 android:layout_width="130dp"
                 android:layout_height="100dp"
-                android:src="@mipmap/file_apk"/>
+                android:src="@mipmap/file_apk" />
 
             <TextView
                 android:id="@+id/item_apk_filename"
@@ -34,15 +34,14 @@
                 android:gravity="center_horizontal"
                 android:maxLines="1"
                 android:text="文件名"
-                android:textColor="@color/textColor"
-                />
-
+                android:textColor="@color/textColor" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/item_apk_delete"
-            style="@style/file_item_select"
-            android:background="#ff0000"
-            android:text="删除"/>
-    </com.mcxtzhang.swipemenulib.SwipeMenuLayout>
+        <View
+            android:id="@+id/view_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/x1" />
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

@@ -12,7 +12,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 
 /**
- * Created by 齐泽威 on 2016/12/7.
+ * Created by ddd on 2016/12/7.
  */
 
 public class VideoAdapter extends BaseQuickAdapter<Video, BaseViewHolder> {

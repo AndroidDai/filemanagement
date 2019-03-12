@@ -24,7 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Created by 齐泽威 on 2017/2/8.
+ * Created by ddd on 2017/2/8.
  */
 
 public class FileNameAdapter  extends RecyclerView.Adapter<FileNameAdapter.MyViewHolder>{

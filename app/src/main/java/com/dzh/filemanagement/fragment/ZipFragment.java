@@ -1,70 +1,110 @@
 package com.dzh.filemanagement.fragment;
 
 
+import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
+import android.provider.MediaStore;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.blankj.utilcode.utils.FileUtils;
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dzh.filemanagement.R;
+import com.dzh.filemanagement.activity.ShowActivity;
 import com.dzh.filemanagement.adapter.ZipAdapter;
-import com.dzh.filemanagement.utils.ACache;
-import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
+import com.dzh.filemanagement.base.ViBaseFragment;
+import com.dzh.filemanagement.core.common.FileType;
+import com.dzh.filemanagement.core.common.MediaResourceManager;
+import com.dzh.filemanagement.utils.FmFileUtils;
+import com.dzh.filemanagement.utils.OpenFileUtil;
+import com.dzh.filemanagement.utils.TimeUtils;
+import com.dzh.filemanagement.utils.ToastUtils;
+import com.dzh.filemanagement.view.DeleteFileDialog;
+import com.dzh.filemanagement.view.IOnDialogBtnClickListener;
+import com.snail.commons.entity.ZipHelper;
+import com.snail.commons.interfaces.Callback;
 import com.yalantis.taurus.PullToRefreshView;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ZipFragment extends Fragment {
-
+public class ZipFragment extends ViBaseFragment implements View.OnClickListener {
     private RecyclerView mRecyclerView;
-    private List<File> mFiles;
+    private List<String> datas;
     private ZipAdapter mAdapter;
-    private Gson mGson;
     private ImageView mLoading;
     private TextView mLoadingText;
-    private ACache mCatch;
-    private SharedPreferences mPreferences;
+    private TextView mSelectPrompt;
+    private RelativeLayout rl_bottom;
     private PullToRefreshView mPullToRefreshView;
-
+    private Context mContext;
+    private ShowActivity mActivity;
+    private Boolean isSelect = false;
+    public static final int MSG_LOAD_SUEECSS = 0x1000;
+    protected static final int MSG_REFRESH_SUEECSS = 0x1001;
+    protected static final int MSG_FAILURE = 0x1002;
+    protected static final int MSG_SHOW_ZIPTOAST = 0x1003;
+    protected static final int MSG_SHOW_UNZIPTOAST = 0x1004;
+    protected static final int MSG_SHOW_UNZIPTOAST_FAILURE = 0x1005;
     private Handler myHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1:
-                    mRecyclerView.setAdapter(mAdapter = new ZipAdapter(getContext(), mFiles));
+                case MSG_LOAD_SUEECSS:
+                    mAdapter.setNewData(datas);
                     mLoading.setVisibility(View.INVISIBLE);
                     mLoadingText.setVisibility(View.INVISIBLE);
                     mPullToRefreshView.setVisibility(View.VISIBLE);
                     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                    mAdapter.setOnItemClickLitener(new ZipAdapter.OnItemClickLitener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                        }
-
-                        @Override
-                        public void onItemLongClick(View view, int position) {
-                        }
-                    });
+                    break;
+                case MSG_REFRESH_SUEECSS:
+                    mAdapter.setNewData(datas);
+                    mPullToRefreshView.setVisibility(View.VISIBLE);
+                    mPullToRefreshView.setRefreshing(false);
+                    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                    break;
+                case MSG_FAILURE:
+                    datas.clear();
+                    mAdapter.setNewData(datas);
+                    mLoading.setVisibility(View.VISIBLE);
+                    break;
+                case MSG_SHOW_ZIPTOAST:
+                    mAdapter.deselectAll();
+                    Bundle bundle = msg.getData();
+                    String path = bundle.getString("path");
+                    ToastUtils.showToast(mContext, "压缩后文件目录为：" + path);
+                    mActivity.hideProgress();
+                    break;
+                case MSG_SHOW_UNZIPTOAST:
+                    mAdapter.deselectAll();
+                    Bundle unZipBundle = msg.getData();
+                    String unZipPath = unZipBundle.getString("path");
+                    ToastUtils.showToast(mContext, "压缩后文件目录为：" + unZipPath);
+                    mActivity.hideProgress();
+                    break;
+                case MSG_SHOW_UNZIPTOAST_FAILURE:
+                    ToastUtils.showToast(mActivity, "解压失败");
+                    mActivity.hideProgress();
                     break;
             }
             super.handleMessage(msg);
@@ -72,137 +112,268 @@ public class ZipFragment extends Fragment {
     };
 
 
+    @Override
+    protected void initView(View view) {
+        super.initView(view);
+        mContext = getActivity();
+        TextView title = (TextView) mRootView.findViewById(R.id.title);
+        title.setText("压缩包");
+        mLoading = (ImageView) mRootView.findViewById(R.id.loading_gif);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
+        mLoadingText = (TextView) mRootView.findViewById(R.id.loading_text);
+        mPullToRefreshView = (PullToRefreshView) mRootView.findViewById(R.id.pull_to_refresh);
+        rl_bottom = mRootView.findViewById(R.id.rl_file_select);
+        mSelectPrompt = mRootView.findViewById(R.id.file_select);
+        Glide.with(getContext()).load(R.drawable.loading)
+                .asGif().into(mLoading);
+        datas = new ArrayList<>();
+        mAdapter = new ZipAdapter(datas, mContext);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        initData(true);
+        initListener();
+    }
+
+    public void initListener() {
+
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData(false);
+            }
+        });
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (isSelect) {
+                    mAdapter.toggleSelection(position);
+                } else {
+                    OpenFileUtil.openFile(datas.get(position), mActivity);
+                }
+            }
+        });
+        mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                if (!isSelect) {
+                    isSelect = true;
+                    mSelectPrompt.setText("取消");
+                    rl_bottom.setVisibility(View.VISIBLE);
+                }
+                mAdapter.toggleSelection(position);
+                return true;
+            }
+        });
+        mRootView.findViewById(R.id.file_delete).setOnClickListener(this);
+        mRootView.findViewById(R.id.file_zip).setOnClickListener(this);
+        TextView share = mRootView.findViewById(R.id.file_share);
+        share.findViewById(R.id.file_share).setOnClickListener(this);
+        share.setText("解压");
+        mRootView.findViewById(R.id.return_index).setOnClickListener(this);
+        mSelectPrompt.setOnClickListener(this);
+    }
+
     public ZipFragment() {
         // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View ret = inflater.inflate(R.layout.fragment_zip, container, false);
-
-        TextView title = (TextView) ret.findViewById(R.id.title);
-        title.setText("压缩包");
-        ImageView reicon = (ImageView)ret.findViewById(R.id.return_index);
-        reicon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
-        mLoading = (ImageView) ret.findViewById(R.id.loading_gif);
-        mRecyclerView = (RecyclerView) ret.findViewById(R.id.id_recyclerview);
-        mLoadingText = (TextView) ret.findViewById(R.id.loading_text);
-        mPullToRefreshView = (PullToRefreshView) ret.findViewById(R.id.pull_to_refresh);
-        Glide.with(getContext()).load(R.drawable.loading)
-                .asGif().into(mLoading);
-        mFiles = new ArrayList<>();
-        mGson = new Gson();
-        mCatch = ACache.get(getContext());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mFiles = FileUtils.listFilesInDirWithFilter(Environment.getExternalStorageDirectory(), ".zip");
-                        addCatch();
-                        try{
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    mAdapter.notifyDataSetChanged();
-                                    mPullToRefreshView.setRefreshing(false);
-                                    Toast.makeText(getContext(), "刷新完成", Toast.LENGTH_SHORT).show();
-                                }
-                            });}
-                        catch (Exception e){
-
-                        }
-                    }
-                }).start();
-
-            }
-        });
-        initDate();
-        return ret;
+    protected int getContentView() {
+        return R.layout.fragment_image;
     }
 
-    private void initDate() {
-        //开线程初始化数据
+    private ContentResolver mContentResolver = MediaResourceManager.mContentResolver;
 
+    private void initData(final boolean isLoad) {
+        //开线程初始化数据
         new Thread(new Runnable() {
             @Override
             public void run() {
-                judge();
+                // 扫描files文件库
+                Cursor c = null;
                 Message message = new Message();
-                message.what = 1;
-                myHandler.sendMessage(message);
+                try {
+                    c = mContentResolver.query(MediaStore.Files.getContentUri("external"), new String[]{"_id", "_data", "_size"}, null, null, null);
+                    int dataindex = c.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                    datas.clear();
+                    while (c.moveToNext()) {
+                        String path = c.getString(dataindex);
+
+                        if (FileType.isZip(path)) {
+                            if (!FmFileUtils.isExists(path)) {
+                                continue;
+                            }
+                            datas.add(path);
+                            if (isLoad) {
+                                message.what = MSG_LOAD_SUEECSS;
+                            } else {
+                                message.what = MSG_REFRESH_SUEECSS;
+                            }
+
+                        }
+                    }
+                } catch (Exception e) {
+                    message.what = MSG_FAILURE;
+                    e.printStackTrace();
+                } finally {
+                    myHandler.sendMessage(message);
+                    if (c != null) {
+                        c.close();
+                    }
+                }
             }
         }).start();
     }
 
-    private void judge() {
-        try {
-            mPreferences = getContext().getSharedPreferences("table", Context.MODE_PRIVATE);
-        } catch (Exception e) {
-            //子线程未销毁可能时执行
-        }
 
-        boolean first = mPreferences.getBoolean("firstZip", true);
-        int num = mPreferences.getInt("numZip", 0);
-        
-        long time = mPreferences.getLong("ZipTime", 0);
-        long cha = System.currentTimeMillis() - time;
-        //判断缓存时间是否过期
+    @Override
+    public void onClick(View view) {
 
-        if (!first && time != 0 & cha < 86400000) {
-            for (int i = 0; i < num; i++) {
-                String s = String.valueOf(i);
-                String string = mCatch.getAsString(s + "zip");
-                if (string!=null) {
-                    File file = mGson.fromJson(string, File.class);
-                    mFiles.add(file);
+        switch (view.getId()) {
+            case R.id.file_delete:
+                delect();
+                break;
+            case R.id.file_zip:
+                tozip();
+                break;
+            case R.id.file_share:
+                unZip();
+                break;
+            case R.id.return_index:
+                getActivity().finish();
+                break;
+            case R.id.file_select:
+                if (isSelect) {
+                    mSelectPrompt.setText("开始选择");
+                    mAdapter.deselectAll();
+                    rl_bottom.setVisibility(View.GONE);
+                } else {
+                    mSelectPrompt.setText("取消");
+                    rl_bottom.setVisibility(View.VISIBLE);
                 }
+                isSelect = !isSelect;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 解压
+     */
+    private void unZip() {
+        HashSet<Integer> selection = mAdapter.getSelection();
+        int size = selection.size();
+        if (size == 0) {
+            ToastUtils.showToast(mContext, "请先选择一个要解压的文件");
+            return;
+        } else if (size != 1) {
+            ToastUtils.showToast(mContext, "一次只能解压一个压缩包");
+            return;
+        } else {
+            String path = null;
+            for (Integer integer : selection) {
+                path = datas.get(integer);
+            }
+            if (path == null) {
+                ToastUtils.showToast(mContext, "选择文件无效");
+            }
+            File file = new File(path);
+            final File filePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/filemanagement/unzip/" + file.getName());
+            if (!filePath.exists()) {
+                filePath.mkdirs();
+            }
+            mActivity.showProgress("正在拼命解压");
+            ZipHelper.INSTANCE.unzip().addZipFile(file).setTargetDir(filePath.getAbsolutePath()).execute(new Callback<Boolean>() {
+                @Override
+                public void onCallback(@Nullable Boolean obj) {
+                    Message msg = new Message();
+                    if (obj) {
+                        msg.what = MSG_SHOW_UNZIPTOAST;
+                        Bundle bundle = new Bundle();
+                        bundle.putString("path", filePath.getAbsolutePath());
+                        msg.setData(bundle);
+                    } else {
+                        msg.what = MSG_SHOW_UNZIPTOAST_FAILURE;
+                    }
+                    myHandler.sendMessage(msg);
+                }
+            });
+        }
+    }
+
+    /**
+     * 压缩
+     */
+    private void tozip() {
+        HashSet<Integer> selection = mAdapter.getSelection();
+        int size = selection.size();
+        if (size == 0) {
+            ToastUtils.showToast(mContext, "请先选择一个要压缩的文件");
+            return;
+        }
+        List<File> files = new ArrayList<>();
+        for (Integer integer : selection) {
+            File file = new File(datas.get(integer));
+            files.add(file);
+        }
+        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/filemanagement/zip");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String fileName = TimeUtils.getWorkTime(System.currentTimeMillis());
+        mActivity.showProgress("正在拼命压缩");
+        ZipHelper.INSTANCE.zip().addSourceFiles(files).setTarget(file.getAbsolutePath(), fileName).execute(new Callback<File>() {
+            @Override
+            public void onCallback(@Nullable File obj) {
+                Message msg = new Message();
+                msg.what = MSG_SHOW_ZIPTOAST;
+                Bundle bundle = new Bundle();
+                bundle.putString("path", file.getAbsolutePath());
+                msg.setData(bundle);
+                myHandler.sendMessage(msg);
 
             }
-        } else {
+        });
 
-            mFiles = FileUtils.listFilesInDirWithFilter(Environment.getExternalStorageDirectory(), ".zip");
-            addCatch();
+    }
+
+    /**
+     * 删除文件
+     */
+    private void delect() {
+        if (datas.size() == 0) {
+            ToastUtils.showToast(mContext, "请先选择一个要删除的文件");
+            return;
         }
-    }
-
-    private void addCatch() {
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < mFiles.size(); i++) {
-            String s = mGson.toJson(mFiles.get(i));
-            strings.add(s);
+        HashSet<Integer> selection = mAdapter.getSelection();
+        List<String> mSelectList = new ArrayList<>();
+        for (Integer integer : selection) {
+            mSelectList.add(datas.get(integer));
         }
-        for (int i = 0; i < strings.size(); i++) {
-            String s = String.valueOf(i);
-            mCatch.put(s + "zip", strings.get(i), ACache.TIME_DAY);
-        }
+        DeleteFileDialog dialog = new DeleteFileDialog(mContext, getActivity(), mSelectList);
+        dialog.setOnDialogBtnClickListener(new IOnDialogBtnClickListener() {
+            @Override
+            public void onOkClick(View view, String result) {
+                mAdapter.deselectAll();
+                initData(false);
+            }
 
+            @Override
+            public void onCancelClick(View view) {
 
-        SharedPreferences.Editor edit = mPreferences.edit();
-        edit.putBoolean("firstZip", false);
-        edit.putInt("numZip", strings.size());
-        edit.putLong("ZipTime", System.currentTimeMillis());
-        edit.commit();
+            }
+        });
+        dialog.show();
     }
 
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart("Zip_Fragment"); //统计页面，"MainScreen"为页面名称，可自定义
+    @Override
+    public void onAttach(Context context) {
+        mContext = context;
+        mActivity = (ShowActivity) getActivity();
+        super.onAttach(context);
     }
 
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd("Zip_Fragment");
-    }
 }

@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="快客文件压缩器"
+                android:text="绿霸文件压缩器"
                 android:textColor="#388cff"
                 android:textSize="21sp"
                 android:textStyle="bold"/>
@@ -166,7 +166,7 @@ android:background="@color/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="关于快客"
+                android:text="关于绿霸"
                 android:textColor="#fff"
                 android:textSize="21sp"/>
         </LinearLayout>

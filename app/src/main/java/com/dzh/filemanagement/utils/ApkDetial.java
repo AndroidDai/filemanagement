@@ -4,7 +4,7 @@ package com.dzh.filemanagement.utils;
 import android.graphics.drawable.Drawable;
 
 /**
- * Created by 齐泽威 on 2017/1/30.
+ * Created by ddd on 2017/1/30.
  */
 
 public class ApkDetial {

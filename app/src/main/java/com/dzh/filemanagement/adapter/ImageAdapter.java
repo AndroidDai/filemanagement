@@ -15,7 +15,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 
 /**
- * Created by 齐泽威 on 2016/12/6.
+ * Created by ddd on 2016/12/6.
  */
 
 public class ImageAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

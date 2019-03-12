@@ -2,8 +2,8 @@
 <resources>
 
     <color name="white">#FFFFFF</color>
-    <color name="blue">#0066FF</color>
-    <color name="colorTheme">#036cfc</color>
+    <color name="blue">#08d386</color>
+    <color name="colorTheme">#08d386</color>
     <color name="no_color">#00000000</color>
     <color name="black">#000000</color>
     <color name="text_color">#434343</color>
@@ -22,7 +22,7 @@
     <color name="color_green_1">#08d386</color>
     <color name="color_green_2">#18bc9a</color>
     <color name="color_green_360">#0ab044</color>
-    <color name="colorPrimary">#388cff</color>
+    <color name="colorPrimary">#08d386</color>
     <color name="colorPrimaryDark">#036cfc</color>
     <color name="colorAccent">#FF504d</color>
     <color name="backGround">#eae7dd</color>

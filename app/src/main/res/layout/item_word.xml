@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="7dp"
-    >
-    <com.mcxtzhang.swipemenulib.SwipeMenuLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        >
+    android:layout_marginTop="7dp">
+
 
     <LinearLayout
         android:id="@+id/word_linear"
@@ -17,28 +11,28 @@
         android:layout_height="wrap_content"
         android:background="@color/BColor"
         android:orientation="horizontal"
-        android:padding="7dp"
-        >
+        android:padding="7dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/file_word"/>
+            android:src="@mipmap/file_word" />
 
         <TextView
             android:id="@+id/item_word_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/textColor"
-            android:text="fileame"/>
+            android:text="fileame"
+            android:textColor="@color/textColor" />
 
     </LinearLayout>
-        <TextView
-            android:id="@+id/file_word_delete"
-            style="@style/file_item_select"
-            android:background="#ff0000"
-            android:textSize="21sp"
-            android:text="删除"/>
-    </com.mcxtzhang.swipemenulib.SwipeMenuLayout>
+    <View
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x82"
+        android:layout_marginLeft="@dimen/x2"
+        android:layout_marginTop="@dimen/x1"
+        android:layout_marginRight="@dimen/x2"
+        android:background="@drawable/shape_album_select_sel" />
 </androidx.cardview.widget.CardView>

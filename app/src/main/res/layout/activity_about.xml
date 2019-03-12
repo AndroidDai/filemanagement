@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="快客文件管理器"
+            android:text="绿霸文件管理器"
             android:textColor="#000"
             android:gravity="center_horizontal"
             android:textSize="23sp"
@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="齐泽威"
+            android:text="ddd"
             android:gravity="center_horizontal"/>
         <TextView
             android:layout_width="match_parent"

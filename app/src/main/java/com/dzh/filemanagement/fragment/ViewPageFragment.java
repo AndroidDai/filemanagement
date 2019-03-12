@@ -22,7 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 public class ViewPageFragment extends Fragment {
 
     private FileListPageFragment mFileListPageFragment = null;
-    private FileCategoryPageFragment mFileCategoryPageFragment = null;
+    private FavoritePageFragment mFavoritePageFragment = null;
 
     private ViewPagerAdapter mAdapter = null;
     private ViewPager mViewPager = null;
@@ -32,13 +32,14 @@ public class ViewPageFragment extends Fragment {
     private PagerSlidingTabStrip mTabs = null;
     public ViewPager.OnPageChangeListener mDelegatePageListener = null;
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         findViews(inflater);
         initFragment();
 
         mPagerItemList.add(mFileListPageFragment);
-        mPagerItemList.add(mFileCategoryPageFragment);
+        mPagerItemList.add(mFavoritePageFragment);
 
         mAdapter = new ViewPagerAdapter(getFragmentManager(), new String[]{"目录", "分类"});
         mViewPager.setAdapter(mAdapter);
@@ -53,8 +54,8 @@ public class ViewPageFragment extends Fragment {
                 if (position == 0) {
                     mFileListPageFragment.startAnim();
                 } else if (position == 1) {
-                    mFileCategoryPageFragment.startPieChartAnim();
-                    mFileCategoryPageFragment.refreshUi();
+                    mFavoritePageFragment.reLoadFavoriteList();
+                    mFavoritePageFragment.startListAnim();
                 }
                 if (mDelegatePageListener != null) {
                     mDelegatePageListener.onPageSelected(position);
@@ -78,9 +79,7 @@ public class ViewPageFragment extends Fragment {
         return mView;
     }
 
-    public FileCategoryPageFragment getFileCategoryPageFragment() {
-        return mFileCategoryPageFragment;
-    }
+
 
     public List<Fragment> getPageFragments() {
         return mPagerItemList;
@@ -97,10 +96,11 @@ public class ViewPageFragment extends Fragment {
 
     private void initFragment() {
         mFileListPageFragment = new FileListPageFragment();
-        mFileCategoryPageFragment = new FileCategoryPageFragment();
+        mFavoritePageFragment = new FavoritePageFragment();
 
     }
 
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
@@ -169,14 +169,5 @@ public class ViewPageFragment extends Fragment {
         mViewPager.setCurrentItem(position);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (mViewPager.getCurrentItem() == 1) {
-            mFileCategoryPageFragment.refreshUi();
-
-        }
-    }
 
 }
